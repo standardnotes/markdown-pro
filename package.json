@@ -1,8 +1,8 @@
 {
-  "name": "simple-markdown-editor",
+  "name": "sn-advanced-markdown-editor",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/dist.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
