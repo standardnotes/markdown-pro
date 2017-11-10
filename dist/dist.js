@@ -327,6 +327,26 @@ var ComponentManager = function () {
 
     /* Utilities */
 
+    /*
+      This function prevents actions like saves from being made after every keystroke, and instead
+      waits defaultDelay before performing function. For example, if a user types a keystroke, and the clienet calls saveItem,
+      a 250ms delay will begin. If they type another keystroke within 250ms, the previously pending
+      save will be cancelled, and another 250ms delay occurs. If ater 250ms the pending delay is not cleared by a future call,
+      the save will finally trigger.
+    */
+
+  }, {
+    key: "replacePendingAndPerformAfterDelay",
+    value: function replacePendingAndPerformAfterDelay(block) {
+      var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 250;
+
+      if (this.pendingTimeout) {
+        clearTimeout(this.pendingTimeout);
+      }
+      this.pendingTimeout = setTimeout(function () {
+        block();
+      }, delay);
+    }
   }, {
     key: "generateUUID",
     value: function generateUUID() {
@@ -418,28 +438,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
   simplemde.codemirror.on("change", function () {
     if (!ignoreTextChange) {
       lastValue = simplemde.value();
-      performAfterDelay(function () {
-        console.log("Saving");
-      });
       if (workingNote) {
         workingNote.content.text = lastValue;
-        performAfterDelay(function () {
+        componentManager.replacePendingAndPerformAfterDelay(function () {
           componentManager.saveItem(workingNote);
         });
       }
     }
   });
-
-  var defaultDelay = 250;
-  var pendingTimeout;
-  function performAfterDelay(block) {
-    if (pendingTimeout) {
-      clearTimeout(pendingTimeout);
-    }
-    pendingTimeout = setTimeout(function () {
-      block();
-    }, defaultDelay);
-  }
 });
 
 
