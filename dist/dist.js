@@ -188,7 +188,7 @@ var ComponentManager = function () {
           If we make a change locally, then for whatever reason receive an item via streamItems/streamContextItem,
           we want to ignore that change if it was made prior to the latest change we've made.
         */
-        if (_this2.streamedContextItem && _this2.streamContextItem.uuid == item.uuid && _this2.streamedContextItem.updated_at > item.updated_at) {
+        if (_this2.streamedContextItem && _this2.streamedContextItem.uuid == item.uuid && _this2.streamedContextItem.updated_at > item.updated_at) {
           return;
         }
         _this2.streamedContextItem = item;
