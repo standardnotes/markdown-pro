@@ -28,6 +28,9 @@ var ComponentManager = function () {
     this.loggingEnabled = false;
     this.onReadyCallback = onReady;
 
+    this.coallesedSaving = true;
+    this.coallesedSavingDelay = 250;
+
     window.addEventListener("message", function (event) {
       if (this.loggingEnabled) {
         console.log("Components API Message received:", event.data);
@@ -246,12 +249,35 @@ var ComponentManager = function () {
   }, {
     key: "saveItems",
     value: function saveItems(items) {
+      var _this3 = this;
+
       items = items.map(function (item) {
         item.updated_at = new Date();
         return this.jsonObjectForItem(item);
       }.bind(this));
 
-      this.postMessage("save-items", { items: items }, function (data) {});
+      var saveBlock = function saveBlock() {
+        _this3.postMessage("save-items", { items: items }, function (data) {});
+      };
+
+      /*
+          Coallesed saving prevents saves from being made after every keystroke, and instead
+          waits coallesedSavingDelay before performing action. For example, if a user types a keystroke, and the clienet calls saveItem,
+          a 250ms delay will begin. If they type another keystroke within 250ms, the previously pending
+          save will be cancelled, and another 250ms delay occurs. If ater 250ms the pending delay is not cleared by a future call,
+          the save will finally trigger.
+           Note: it's important to modify saving items updated_at immediately and not after delay. If you modify after delay,
+          a delayed sync could just be wrapping up, and will send back old data and replace what the user has typed.
+      */
+      if (this.coallesedSaving == true) {
+        if (this.pendingSave) {
+          clearTimeout(this.pendingSave);
+        }
+
+        this.pendingSave = setTimeout(function () {
+          saveBlock();
+        }, this.coallesedSavingDelay);
+      }
     }
   }, {
     key: "jsonObjectForItem",
@@ -327,26 +353,6 @@ var ComponentManager = function () {
 
     /* Utilities */
 
-    /*
-      This function prevents actions like saves from being made after every keystroke, and instead
-      waits defaultDelay before performing function. For example, if a user types a keystroke, and the clienet calls saveItem,
-      a 250ms delay will begin. If they type another keystroke within 250ms, the previously pending
-      save will be cancelled, and another 250ms delay occurs. If ater 250ms the pending delay is not cleared by a future call,
-      the save will finally trigger.
-    */
-
-  }, {
-    key: "replacePendingAndPerformAfterDelay",
-    value: function replacePendingAndPerformAfterDelay(block) {
-      var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 250;
-
-      if (this.pendingTimeout) {
-        clearTimeout(this.pendingTimeout);
-      }
-      this.pendingTimeout = setTimeout(function () {
-        block();
-      }, delay);
-    }
   }, {
     key: "generateUUID",
     value: function generateUUID() {
@@ -440,9 +446,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
       lastValue = simplemde.value();
       if (workingNote) {
         workingNote.content.text = lastValue;
-        componentManager.replacePendingAndPerformAfterDelay(function () {
-          componentManager.saveItem(workingNote);
-        });
+        componentManager.saveItem(workingNote);
       }
     }
   });
