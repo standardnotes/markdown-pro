@@ -418,12 +418,28 @@ document.addEventListener("DOMContentLoaded", function (event) {
   simplemde.codemirror.on("change", function () {
     if (!ignoreTextChange) {
       lastValue = simplemde.value();
+      performAfterDelay(function () {
+        console.log("Saving");
+      });
       if (workingNote) {
         workingNote.content.text = lastValue;
-        componentManager.saveItem(workingNote);
+        performAfterDelay(function () {
+          componentManager.saveItem(workingNote);
+        });
       }
     }
   });
+
+  var defaultDelay = 250;
+  var pendingTimeout;
+  function performAfterDelay(block) {
+    if (pendingTimeout) {
+      clearTimeout(pendingTimeout);
+    }
+    pendingTimeout = setTimeout(function () {
+      block();
+    }, defaultDelay);
+  }
 });
 
 

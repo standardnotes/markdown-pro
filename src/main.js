@@ -58,9 +58,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
       lastValue = simplemde.value();
       if(workingNote) {
         workingNote.content.text = lastValue;
-        componentManager.saveItem(workingNote);
+        componentManager.replacePendingAndPerformAfterDelay(() => {
+          componentManager.saveItem(workingNote);
+        })
       }
     }
   });
-
 });
