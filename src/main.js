@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var lastValue;
 
   componentManager.streamContextItem((note) => {
-    
+
     workingNote = note;
 
     if(!window.simplemde) {
@@ -56,8 +56,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
   simplemde.codemirror.on("change", function(){
     if(!ignoreTextChange) {
       lastValue = simplemde.value();
-      workingNote.content.text = lastValue;
-      componentManager.saveItem(workingNote);
+      if(workingNote) {
+        workingNote.content.text = lastValue;
+        componentManager.saveItem(workingNote);
+      }
     }
   });
 
