@@ -4,13 +4,13 @@
   "description": "",
   "main": "dist/dist.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "grunt"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "simplemde": "^1.11.2",
-    "sn-components-api": "^1.0.11"
+    "sn-components-api": "^1.0.12"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
