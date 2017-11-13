@@ -416,7 +416,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     workingNote = note;
 
-    if (!window.simplemde) {
+    // Only update UI on non-metadata updates.
+    if (note.isMetadataUpdate || !window.simplemde) {
       return;
     }
 
