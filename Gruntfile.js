@@ -70,7 +70,10 @@ module.exports = function(grunt) {
       },
 
       css: {
-        src: ['dist/app.css', 'node_modules/simplemde/dist/simplemde.min.css'],
+        options: {
+          separator: '',
+        },
+        src: ['node_modules/simplemde/dist/simplemde.min.css', 'dist/app.css'],
         dest: 'dist/dist.css',
       }
     },
