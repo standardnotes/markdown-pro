@@ -1,13 +1,11 @@
 {
   "name": "sn-advanced-markdown-editor",
-  "version": "1.0.18",
+  "version": "1.0.181",
   "description": "",
   "main": "dist/dist.js",
   "author": "",
   "license": "ISC",
-  "dependencies": {
-
-  },
+  "dependencies": {},
   "devDependencies": {
     "simplemde": "^1.11.2",
     "sn-components-api": "^1.0.16",

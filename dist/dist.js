@@ -410,9 +410,16 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   var ignoreTextChange = false;
   var initialLoad = true;
-  var lastValue;
+  var lastValue, lastUUID;
 
   componentManager.streamContextItem(function (note) {
+
+    if (note.uuid !== lastUUID) {
+      // Note changed, reset last values
+      lastValue = null;
+      initialLoad = true;
+      lastUUID = note.uuid;
+    }
 
     workingNote = note;
 
