@@ -4,7 +4,6 @@
   "description": "",
   "main": "dist/dist.js",
   "author": "",
-  "license": "ISC",
   "dependencies": {},
   "devDependencies": {
     "simplemde": "^1.11.2",
