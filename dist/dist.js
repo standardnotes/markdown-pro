@@ -437,6 +437,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
     if (initialLoad) {
       initialLoad = false;
       window.simplemde.codemirror.getDoc().clearHistory();
+      if (window.simplemde.isPreviewActive()) {
+        window.simplemde.togglePreview();
+      }
     }
   });
 
