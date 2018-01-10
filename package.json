@@ -1,9 +1,12 @@
 {
   "name": "sn-advanced-markdown-editor",
-  "version": "1.0.182",
+  "version": "1.0.183",
   "description": "",
   "main": "dist/dist.js",
   "author": "",
+  "sn": {
+    "main": "index.html"
+  },
   "dependencies": {},
   "devDependencies": {
     "simplemde": "^1.11.2",
