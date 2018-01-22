@@ -24,8 +24,9 @@ var ComponentManager = function () {
 
     this.sentMessages = [];
     this.messageQueue = [];
-    this.permissions = permissions;
+    this.initialPermissions = permissions;
     this.loggingEnabled = false;
+    this.acceptsThemes = true;
     this.onReadyCallback = onReady;
 
     this.coallesedSaving = true;
@@ -45,13 +46,15 @@ var ComponentManager = function () {
       if (payload.action === "component-registered") {
         this.sessionKey = payload.sessionKey;
         this.componentData = payload.componentData;
-        this.onReady();
+        this.onReady(payload.data);
 
         if (this.loggingEnabled) {
           console.log("Component successfully registered with payload:", payload);
         }
       } else if (payload.action === "themes") {
-        this.activateThemes(payload.data.themes);
+        if (this.acceptsThemes) {
+          this.activateThemes(payload.data.themes);
+        }
       } else if (payload.original) {
         // get callback from queue
         var originalMessage = this.sentMessages.filter(function (message) {
@@ -65,7 +68,11 @@ var ComponentManager = function () {
     }
   }, {
     key: "onReady",
-    value: function onReady() {
+    value: function onReady(data) {
+      if (this.initialPermissions && this.initialPermissions.length > 0) {
+        this.requestPermissions(this.initialPermissions);
+      }
+
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -92,10 +99,22 @@ var ComponentManager = function () {
       }
 
       this.messageQueue = [];
+      this.environment = data.environment;
+      this.uuid = data.uuid;
 
       if (this.onReadyCallback) {
         this.onReadyCallback();
       }
+    }
+  }, {
+    key: "getSelfComponentUUID",
+    value: function getSelfComponentUUID() {
+      return this.uuid;
+    }
+  }, {
+    key: "isRunningInDesktopApplication",
+    value: function isRunningInDesktopApplication() {
+      return this.environment === "desktop";
     }
   }, {
     key: "setComponentDataValueForKey",
@@ -131,7 +150,6 @@ var ComponentManager = function () {
         data: data,
         messageId: this.generateUUID(),
         sessionKey: this.sessionKey,
-        permissions: this.permissions,
         api: "component"
       };
 
@@ -151,50 +169,40 @@ var ComponentManager = function () {
       this.postMessage("set-size", { type: type, width: width, height: height }, function (data) {});
     }
   }, {
+    key: "requestPermissions",
+    value: function requestPermissions(permissions, callback) {
+      this.postMessage("request-permissions", { permissions: permissions }, function (data) {
+        callback && callback();
+      }.bind(this));
+    }
+  }, {
     key: "streamItems",
-    value: function streamItems(contentType) {
-      this.postMessage("stream-items", { content_types: [contentType] }, function (data) {
-        var _this = this;
-
-        var items = data.items;
-        if (this.streamedItems) {
-          var filteredItems = items.filter(function (item) {
-            var localCopy = _this.streamItems.filter(function (candidate) {
-              return candidate.uuid == item.uuid;
-            });
-            // If a local copy doesn't exist, it's probably a new item, so we want to return it.
-            if (!localCopy) {
-              return true;
-            } else {
-              // The incoming timestamp should be greater than our last saved timestamp
-              return item.updated_at > localCopy.updated_at;
-            }
-          });
-          // All items should be saved, but only the filtered items should be sent back to the callback
-          this.streamItems = items;
-          callback(filteredItems);
-        } else {
-          this.streamItems = items;
-          callback(items);
-        }
+    value: function streamItems(contentTypes, callback) {
+      if (!Array.isArray(contentTypes)) {
+        contentTypes = [contentTypes];
+      }
+      this.postMessage("stream-items", { content_types: contentTypes }, function (data) {
+        callback(data.items);
       }.bind(this));
     }
   }, {
     key: "streamContextItem",
     value: function streamContextItem(callback) {
-      var _this2 = this;
-
       this.postMessage("stream-context-item", null, function (data) {
         var item = data.item;
         /*
           When an item is saved via saveItem, its updated_at value is set client side to the current date.
           If we make a change locally, then for whatever reason receive an item via streamItems/streamContextItem,
           we want to ignore that change if it was made prior to the latest change we've made.
+           Update 1/22/18: However, if a user is restoring a note from version history, this change
+          will not pass through this filter and will thus be ignored. Because the client now handles
+          this case with isMetadataUpdate, we no longer need the below.
         */
-        if (_this2.streamedContextItem && _this2.streamedContextItem.uuid == item.uuid && _this2.streamedContextItem.updated_at > item.updated_at) {
-          return;
-        }
-        _this2.streamedContextItem = item;
+        // if(this.streamedContextItem && this.streamedContextItem.uuid == item.uuid
+        //   && this.streamedContextItem.updated_at > item.updated_at) {
+        //   return;
+        // }
+        // this.streamedContextItem = item;
         callback(item);
       });
     }
@@ -205,10 +213,11 @@ var ComponentManager = function () {
     }
   }, {
     key: "createItem",
-    value: function createItem(item) {
+    value: function createItem(item, callback) {
       this.postMessage("create-item", { item: this.jsonObjectForItem(item) }, function (data) {
         var item = data.item;
         this.associateItem(item);
+        callback && callback(item);
       }.bind(this));
     }
   }, {
@@ -242,14 +251,21 @@ var ComponentManager = function () {
       this.postMessage("delete-items", params);
     }
   }, {
+    key: "sendCustomEvent",
+    value: function sendCustomEvent(action, data, callback) {
+      this.postMessage(action, data, function (data) {
+        callback && callback(data);
+      }.bind(this));
+    }
+  }, {
     key: "saveItem",
-    value: function saveItem(item) {
-      this.saveItems([item]);
+    value: function saveItem(item, callback) {
+      this.saveItems([item], callback);
     }
   }, {
     key: "saveItems",
-    value: function saveItems(items) {
-      var _this3 = this;
+    value: function saveItems(items, callback) {
+      var _this = this;
 
       items = items.map(function (item) {
         item.updated_at = new Date();
@@ -257,7 +273,9 @@ var ComponentManager = function () {
       }.bind(this));
 
       var saveBlock = function saveBlock() {
-        _this3.postMessage("save-items", { items: items }, function (data) {});
+        _this.postMessage("save-items", { items: items }, function (data) {
+          callback && callback();
+        });
       };
 
       /*
