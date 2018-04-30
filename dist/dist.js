@@ -20,6 +20,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var ComponentManager = function () {
   function ComponentManager(permissions, onReady) {
+    var _this = this;
+
     _classCallCheck(this, ComponentManager);
 
     this.sentMessages = [];
@@ -32,12 +34,28 @@ var ComponentManager = function () {
     this.coallesedSaving = true;
     this.coallesedSavingDelay = 250;
 
-    window.addEventListener("message", function (event) {
-      if (this.loggingEnabled) {
-        console.log("Components API Message received:", event.data);
+    var messageHandler = function messageHandler(event, mobileSource) {
+      if (_this.loggingEnabled) {
+        console.log("Components API Message received:", event.data, "mobile?", mobileSource);
       }
-      this.handleMessage(event.data);
-    }.bind(this), false);
+
+      _this.origin = event.origin;
+      _this.mobileSource = mobileSource;
+      // If from mobile app, JSON needs to be used.
+      var data = mobileSource ? JSON.parse(event.data) : event.data;
+      _this.handleMessage(data);
+    };
+
+    // Mobile (React Native) uses `document`, web/desktop uses `window`.addEventListener
+    // for postMessage API to work properly.
+
+    document.addEventListener("message", function (event) {
+      messageHandler(event, true);
+    }, false);
+
+    window.addEventListener("message", function (event) {
+      messageHandler(event, false);
+    }, false);
   }
 
   _createClass(ComponentManager, [{
@@ -157,11 +175,16 @@ var ComponentManager = function () {
       sentMessage.callback = callback;
       this.sentMessages.push(sentMessage);
 
+      // Mobile (React Native) requires a string for the postMessage API.
+      if (this.mobileSource) {
+        message = JSON.stringify(message);
+      }
+
       if (this.loggingEnabled) {
         console.log("Posting message:", message);
       }
 
-      window.parent.postMessage(message, '*');
+      window.parent.postMessage(message, this.origin);
     }
   }, {
     key: "setSize",
@@ -265,7 +288,7 @@ var ComponentManager = function () {
   }, {
     key: "saveItems",
     value: function saveItems(items, callback) {
-      var _this = this;
+      var _this2 = this;
 
       items = items.map(function (item) {
         item.updated_at = new Date();
@@ -273,19 +296,19 @@ var ComponentManager = function () {
       }.bind(this));
 
       var saveBlock = function saveBlock() {
-        _this.postMessage("save-items", { items: items }, function (data) {
+        _this2.postMessage("save-items", { items: items }, function (data) {
           callback && callback();
         });
       };
 
       /*
-          Coallesed saving prevents saves from being made after every keystroke, and instead
-          waits coallesedSavingDelay before performing action. For example, if a user types a keystroke, and the clienet calls saveItem,
-          a 250ms delay will begin. If they type another keystroke within 250ms, the previously pending
-          save will be cancelled, and another 250ms delay occurs. If ater 250ms the pending delay is not cleared by a future call,
-          the save will finally trigger.
-           Note: it's important to modify saving items updated_at immediately and not after delay. If you modify after delay,
-          a delayed sync could just be wrapping up, and will send back old data and replace what the user has typed.
+        Coallesed saving prevents saves from being made after every keystroke, and instead
+        waits coallesedSavingDelay before performing action. For example, if a user types a keystroke, and the clienet calls saveItem,
+        a 250ms delay will begin. If they type another keystroke within 250ms, the previously pending
+        save will be cancelled, and another 250ms delay occurs. If ater 250ms the pending delay is not cleared by a future call,
+        the save will finally trigger.
+         Note: it's important to modify saving items updated_at immediately and not after delay. If you modify after delay,
+        a delayed sync could just be wrapping up, and will send back old data and replace what the user has typed.
       */
       if (this.coallesedSaving == true) {
         if (this.pendingSave) {
@@ -304,6 +327,17 @@ var ComponentManager = function () {
       copy.children = null;
       copy.parent = null;
       return copy;
+    }
+  }, {
+    key: "getItemAppDataValue",
+    value: function getItemAppDataValue(item, key) {
+      var AppDomain = "org.standardnotes.sn";
+      var data = item.content.appData && item.content.appData[AppDomain];
+      if (data) {
+        return data[key];
+      } else {
+        return null;
+      }
     }
 
     /* Themes */
