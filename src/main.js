@@ -62,11 +62,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
            ],
    });
 
-  window.simplemde.toggleFullScreen();
+   // Some sort of issue on Mobile RN where this causes an exception (".className is not defined")
+   try {
+     window.simplemde.toggleFullScreen();
+   } catch (e) {}
 
-  simplemde.codemirror.on("change", function(){
+  window.simplemde.codemirror.on("change", function(){
     if(!ignoreTextChange) {
-      lastValue = simplemde.value();
+      lastValue = window.simplemde.value();
       if(workingNote) {
         workingNote.content.text = lastValue;
         componentManager.saveItem(workingNote);
