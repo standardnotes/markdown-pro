@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // on ready
   });
 
+  // We'll do our own debouncing
+  componentManager.coallesedSaving = false;
+
   var ignoreTextChange = false;
   var initialLoad = true;
   var lastValue, lastUUID;
@@ -67,12 +70,40 @@ document.addEventListener("DOMContentLoaded", function(event) {
      window.simplemde.toggleFullScreen();
    } catch (e) {}
 
-  window.simplemde.codemirror.on("change", function(){
-    if(!ignoreTextChange) {
+  window.simplemde.codemirror.on("change", function() {
+
+    function strip(html) {
+      var tmp = document.implementation.createHTMLDocument("New").body;
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || "";
+    }
+
+    function truncateString(string, limit = 90) {
+      if(string.length <= limit) {
+        return string;
+      } else {
+        return string.substring(0, limit) + "...";
+      }
+    }
+
+    function save() {
       lastValue = window.simplemde.value();
+      workingNote.content.text = lastValue;
+
+      var html = window.simplemde.options.previewRender(window.simplemde.value());
+      var strippedHtml = truncateString(strip(html));
+      workingNote.content.preview_plain = strippedHtml;
+
+      componentManager.saveItem(workingNote);
+    }
+
+    if(!ignoreTextChange) {
       if(workingNote) {
-        workingNote.content.text = lastValue;
-        componentManager.saveItem(workingNote);
+        // Custom debouncing so we can also debounce preview generation so it doesn't happen on every keystroke.
+        if(window.saveTimer) clearTimeout(window.saveTimer);
+        window.saveTimer = setTimeout(function () {
+          save();
+        }, 250);
       }
     }
   });

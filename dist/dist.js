@@ -39,7 +39,11 @@ var ComponentManager = function () {
         console.log("Components API Message received:", event.data, "mobile?", mobileSource);
       }
 
-      _this.origin = event.origin;
+      // The first message will be the most reliable one, so we won't change it after any subsequent events,
+      // in case you receive an event from another window.
+      if (!_this.origin) {
+        _this.origin = event.origin;
+      }
       _this.mobileSource = mobileSource;
       // If from mobile app, JSON needs to be used.
       var data = mobileSource ? JSON.parse(event.data) : event.data;
@@ -78,6 +82,11 @@ var ComponentManager = function () {
         var originalMessage = this.sentMessages.filter(function (message) {
           return message.messageId === payload.original.messageId;
         })[0];
+
+        if (!originalMessage) {
+          // Connection must have been reset. Alert the user.
+          alert("This extension is attempting to communicate with Standard Notes, but an error is preventing it from doing so. Please restart this extension and try again.");
+        }
 
         if (originalMessage.callback) {
           originalMessage.callback(payload.data);
@@ -239,8 +248,27 @@ var ComponentManager = function () {
     value: function createItem(item, callback) {
       this.postMessage("create-item", { item: this.jsonObjectForItem(item) }, function (data) {
         var item = data.item;
+
+        // A previous version of the SN app had an issue where the item in the reply to create-item
+        // would be nested inside "items" and not "item". So handle both cases here.
+        if (!item && data.items && data.items.length > 0) {
+          item = data.items[0];
+        }
+
         this.associateItem(item);
         callback && callback(item);
+      }.bind(this));
+    }
+  }, {
+    key: "createItems",
+    value: function createItems(items, callback) {
+      var _this2 = this;
+
+      var mapped = items.map(function (item) {
+        return _this2.jsonObjectForItem(item);
+      });
+      this.postMessage("create-items", { items: mapped }, function (data) {
+        callback && callback(data.items);
       }.bind(this));
     }
   }, {
@@ -260,18 +288,21 @@ var ComponentManager = function () {
     }
   }, {
     key: "deleteItem",
-    value: function deleteItem(item) {
-      this.deleteItems([item]);
+    value: function deleteItem(item, callback) {
+      this.deleteItems([item], callback);
     }
   }, {
     key: "deleteItems",
-    value: function deleteItems(items) {
+    value: function deleteItems(items, callback) {
       var params = {
         items: items.map(function (item) {
           return this.jsonObjectForItem(item);
         }.bind(this))
       };
-      this.postMessage("delete-items", params);
+
+      this.postMessage("delete-items", params, function (data) {
+        callback && callback(data);
+      });
     }
   }, {
     key: "sendCustomEvent",
@@ -283,12 +314,22 @@ var ComponentManager = function () {
   }, {
     key: "saveItem",
     value: function saveItem(item, callback) {
-      this.saveItems([item], callback);
+      var skipDebouncer = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+      this.saveItems([item], callback, skipDebouncer);
     }
+
+    /*
+    skipDebouncer allows saves to go through right away rather than waiting for timeout.
+    This should be used when saving items via other means besides keystrokes.
+     */
+
   }, {
     key: "saveItems",
     value: function saveItems(items, callback) {
-      var _this2 = this;
+      var _this3 = this;
+
+      var skipDebouncer = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
       items = items.map(function (item) {
         item.updated_at = new Date();
@@ -296,7 +337,7 @@ var ComponentManager = function () {
       }.bind(this));
 
       var saveBlock = function saveBlock() {
-        _this2.postMessage("save-items", { items: items }, function (data) {
+        _this3.postMessage("save-items", { items: items }, function (data) {
           callback && callback();
         });
       };
@@ -310,7 +351,7 @@ var ComponentManager = function () {
          Note: it's important to modify saving items updated_at immediately and not after delay. If you modify after delay,
         a delayed sync could just be wrapping up, and will send back old data and replace what the user has typed.
       */
-      if (this.coallesedSaving == true) {
+      if (this.coallesedSaving == true && !skipDebouncer) {
         if (this.pendingSave) {
           clearTimeout(this.pendingSave);
         }
@@ -318,6 +359,8 @@ var ComponentManager = function () {
         this.pendingSave = setTimeout(function () {
           saveBlock();
         }, this.coallesedSavingDelay);
+      } else {
+        saveBlock();
       }
     }
   }, {
@@ -393,14 +436,36 @@ var ComponentManager = function () {
   }, {
     key: "deactivateAllCustomThemes",
     value: function deactivateAllCustomThemes() {
-      var elements = document.getElementsByClassName("custom-theme");
+      // make copy, as it will be modified during loop
+      // `getElementsByClassName` is an HTMLCollection, not an Array
+      var elements = Array.from(document.getElementsByClassName("custom-theme")).slice();
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
 
-      [].forEach.call(elements, function (element) {
-        if (element) {
-          element.disabled = true;
-          element.parentNode.removeChild(element);
+      try {
+        for (var _iterator3 = elements[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var element = _step3.value;
+
+          if (element) {
+            element.disabled = true;
+            element.parentNode.removeChild(element);
+          }
         }
-      });
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
     }
 
     /* Utilities */
@@ -460,6 +525,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
     // on ready
   });
 
+  // We'll do our own debouncing
+  componentManager.coallesedSaving = false;
+
   var ignoreTextChange = false;
   var initialLoad = true;
   var lastValue, lastUUID;
@@ -508,11 +576,41 @@ document.addEventListener("DOMContentLoaded", function (event) {
   } catch (e) {}
 
   window.simplemde.codemirror.on("change", function () {
-    if (!ignoreTextChange) {
+
+    function strip(html) {
+      var tmp = document.implementation.createHTMLDocument("New").body;
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || "";
+    }
+
+    function truncateString(string) {
+      var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 90;
+
+      if (string.length <= limit) {
+        return string;
+      } else {
+        return string.substring(0, limit) + "...";
+      }
+    }
+
+    function save() {
       lastValue = window.simplemde.value();
+      workingNote.content.text = lastValue;
+
+      var html = window.simplemde.options.previewRender(window.simplemde.value());
+      var strippedHtml = truncateString(strip(html));
+      workingNote.content.preview_plain = strippedHtml;
+
+      componentManager.saveItem(workingNote);
+    }
+
+    if (!ignoreTextChange) {
       if (workingNote) {
-        workingNote.content.text = lastValue;
-        componentManager.saveItem(workingNote);
+        // Custom debouncing so we can also debounce preview generation so it doesn't happen on every keystroke.
+        if (window.saveTimer) clearTimeout(window.saveTimer);
+        window.saveTimer = setTimeout(function () {
+          save();
+        }, 250);
       }
     }
   });
