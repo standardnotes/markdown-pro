@@ -319,6 +319,22 @@ var ComponentManager = function () {
       this.saveItems([item], callback, skipDebouncer);
     }
 
+    /* Presave allows clients to perform any actions last second before the save actually occurs (like setting previews).
+       Saves debounce by default, so if a client needs to compute a property on an item before saving, it's best to
+       hook into the debounce cycle so that clients don't have to implement their own debouncing.
+     */
+
+  }, {
+    key: "saveItemWithPresave",
+    value: function saveItemWithPresave(item, presave, callback) {
+      this.saveItemsWithPresave([item], presave, callback);
+    }
+  }, {
+    key: "saveItemsWithPresave",
+    value: function saveItemsWithPresave(items, presave, callback) {
+      this.saveItems(items, callback, false, presave);
+    }
+
     /*
     skipDebouncer allows saves to go through right away rather than waiting for timeout.
     This should be used when saving items via other means besides keystrokes.
@@ -330,6 +346,7 @@ var ComponentManager = function () {
       var _this3 = this;
 
       var skipDebouncer = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      var presave = arguments[3];
 
       items = items.map(function (item) {
         item.updated_at = new Date();
@@ -337,6 +354,8 @@ var ComponentManager = function () {
       }.bind(this));
 
       var saveBlock = function saveBlock() {
+        // presave block allows client to gain the benefit of performing something in the debounce cycle.
+        presave && presave();
         _this3.postMessage("save-items", { items: items }, function (data) {
           callback && callback();
         });
@@ -525,9 +544,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
     // on ready
   });
 
-  // We'll do our own debouncing
-  componentManager.coallesedSaving = false;
-
   var ignoreTextChange = false;
   var initialLoad = true;
   var lastValue, lastUUID;
@@ -593,24 +609,18 @@ document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
 
-    function save() {
-      lastValue = window.simplemde.value();
-      workingNote.content.text = lastValue;
-
-      var html = window.simplemde.options.previewRender(window.simplemde.value());
-      var strippedHtml = truncateString(strip(html));
-      workingNote.content.preview_plain = strippedHtml;
-
-      componentManager.saveItem(workingNote);
-    }
-
     if (!ignoreTextChange) {
       if (workingNote) {
-        // Custom debouncing so we can also debounce preview generation so it doesn't happen on every keystroke.
-        if (window.saveTimer) clearTimeout(window.saveTimer);
-        window.saveTimer = setTimeout(function () {
-          save();
-        }, 250);
+        componentManager.saveItemWithPresave(workingNote, function () {
+          lastValue = window.simplemde.value();
+
+          var html = window.simplemde.options.previewRender(window.simplemde.value());
+          var strippedHtml = truncateString(strip(html));
+
+          workingNote.content.preview_plain = strippedHtml;
+          workingNote.content.preview_html = null;
+          workingNote.content.text = lastValue;
+        });
       }
     }
   });

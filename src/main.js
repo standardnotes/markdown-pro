@@ -12,9 +12,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // on ready
   });
 
-  // We'll do our own debouncing
-  componentManager.coallesedSaving = false;
-
   var ignoreTextChange = false;
   var initialLoad = true;
   var lastValue, lastUUID;
@@ -86,24 +83,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
     }
 
-    function save() {
-      lastValue = window.simplemde.value();
-      workingNote.content.text = lastValue;
-
-      var html = window.simplemde.options.previewRender(window.simplemde.value());
-      var strippedHtml = truncateString(strip(html));
-      workingNote.content.preview_plain = strippedHtml;
-
-      componentManager.saveItem(workingNote);
-    }
-
     if(!ignoreTextChange) {
       if(workingNote) {
-        // Custom debouncing so we can also debounce preview generation so it doesn't happen on every keystroke.
-        if(window.saveTimer) clearTimeout(window.saveTimer);
-        window.saveTimer = setTimeout(function () {
-          save();
-        }, 250);
+        componentManager.saveItemWithPresave(workingNote, () => {
+          lastValue = window.simplemde.value();
+
+          var html = window.simplemde.options.previewRender(window.simplemde.value());
+          var strippedHtml = truncateString(strip(html));
+
+          workingNote.content.preview_plain = strippedHtml;
+          workingNote.content.preview_html = null;
+          workingNote.content.text = lastValue;
+        });
+
       }
     }
   });
