@@ -10,6 +10,13 @@ module.exports = function(grunt) {
         spawn: false,
       },
     },
+    css: {
+      files: ['src/main.scss'],
+      tasks: ['sass','concat:css', 'copy'],
+      options: {
+        spawn: false,
+      },
+    }
   },
 
   sass: {
