@@ -80,7 +80,7 @@ module.exports = function(grunt) {
         options: {
           separator: '',
         },
-        src: ['node_modules/simplemde/dist/simplemde.min.css', 'dist/app.css'],
+        src: ['node_modules/simplemde/dist/simplemde.min.css', 'node_modules/sn-stylekit/dist/stylekit.css', 'dist/app.css'],
         dest: 'dist/dist.css',
       }
     },
