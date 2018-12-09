@@ -1182,6 +1182,8 @@ body, html {
   border: 0;
   border-left: 1px solid var(--sn-stylekit-border-color);
   color: var(--sn-stylekit-contrast-foreground-color);
+  font-size: var(--sn-stylekit-font-size-editor);
+  padding: 10px 15px;
 }
 .editor-preview-active a, .editor-preview-active-side a {
   color: var(--sn-stylekit-info-color);
