@@ -86,6 +86,21 @@ body, html {
     border: 1px solid var(--sn-stylekit-border-color);;
     border-radius: 3px;
   }
+
+  blockquote {
+    padding: 0 0.5rem;
+    margin-left: 0;
+    color: var(--sn-stylekit-neutral-color);
+    border-left: 0.3rem solid var(--sn-stylekit-background-color);
+  }
+
+  blockquote > :first-child {
+    margin-top: 0;
+  }
+
+  blockquote > :last-child {
+    margin-bottom: 0;
+  }
 }
 
 .editor-preview-active {

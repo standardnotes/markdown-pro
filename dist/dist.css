@@ -1216,6 +1216,18 @@ body, html {
   border: 1px solid var(--sn-stylekit-border-color);
   border-radius: 3px;
 }
+.editor-preview-active blockquote, .editor-preview-active-side blockquote {
+  padding: 0 0.5rem;
+  margin-left: 0;
+  color: var(--sn-stylekit-neutral-color);
+  border-left: 0.3rem solid var(--sn-stylekit-background-color);
+}
+.editor-preview-active blockquote > :first-child, .editor-preview-active-side blockquote > :first-child {
+  margin-top: 0;
+}
+.editor-preview-active blockquote > :last-child, .editor-preview-active-side blockquote > :last-child {
+  margin-bottom: 0;
+}
 
 .editor-preview-active {
   border: 0;
