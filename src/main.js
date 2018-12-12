@@ -2,15 +2,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   var workingNote;
 
-  var permissions = [
-    {
-      name: "stream-context-item"
-    }
-  ]
-
-  var componentManager = new ComponentManager(permissions, function(){
-    // on ready
-  });
+  var componentManager = new ComponentManager();
 
   var ignoreTextChange = false;
   var initialLoad = true;
