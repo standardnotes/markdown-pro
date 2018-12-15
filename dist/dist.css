@@ -44,6 +44,7 @@
   --sn-stylekit-input-border-color: #e3e3e3;
   --sn-stylekit-scrollbar-thumb-color: #dfdfdf;
   --sn-stylekit-scrollbar-track-border-color: #E7E7E7;
+  --sn-stylekit-general-border-radius: 2px;
 }
 
 .sn-component {
@@ -278,7 +279,7 @@
 .sn-component .sk-menu-panel .sk-menu-panel-row .sk-menu-panel-column .left {
   display: flex;
 }
-.sn-component .sk-menu-panel .sk-menu-panel-row .sk-button .sk-label, .sn-component .sk-menu-panel .sk-menu-panel-row .sk-box .sk-label, .sn-component .sk-menu-panel .sk-menu-panel-row .sk-circle .sk-label, .sn-component .sk-menu-panel .sk-menu-panel-row .sk-button .sk-panel-section .sk-panel-section-subtitle, .sn-component .sk-panel-section .sk-menu-panel .sk-menu-panel-row .sk-button .sk-panel-section-subtitle, .sn-component .sk-menu-panel .sk-menu-panel-row .sk-box .sk-panel-section .sk-panel-section-subtitle, .sn-component .sk-panel-section .sk-menu-panel .sk-menu-panel-row .sk-box .sk-panel-section-subtitle, .sn-component .sk-menu-panel .sk-menu-panel-row .sk-circle .sk-panel-section .sk-panel-section-subtitle, .sn-component .sk-panel-section .sk-menu-panel .sk-menu-panel-row .sk-circle .sk-panel-section-subtitle {
+.sn-component .sk-menu-panel .sk-menu-panel-row .sk-button .sk-label, .sn-component .sk-menu-panel .sk-menu-panel-row .sk-box .sk-label, .sn-component .sk-menu-panel .sk-menu-panel-row .sk-button .sk-panel-section .sk-panel-section-subtitle, .sn-component .sk-panel-section .sk-menu-panel .sk-menu-panel-row .sk-button .sk-panel-section-subtitle, .sn-component .sk-menu-panel .sk-menu-panel-row .sk-box .sk-panel-section .sk-panel-section-subtitle, .sn-component .sk-panel-section .sk-menu-panel .sk-menu-panel-row .sk-box .sk-panel-section-subtitle {
   font-size: var(--sn-stylekit-font-size-h6);
   font-weight: normal;
 }
@@ -342,13 +343,14 @@
 }
 .sn-component a.sk-a {
   cursor: pointer;
+  user-select: none;
 }
 .sn-component a.sk-a.disabled {
   color: var(--sn-stylekit-neutral-color);
   opacity: 0.6;
 }
 .sn-component a.sk-a.boxed {
-  border-radius: 3px;
+  border-radius: var(--sn-stylekit-general-border-radius);
   padding: 0.3rem 0.4rem;
 }
 .sn-component a.sk-a.boxed:hover {
@@ -376,6 +378,12 @@
 }
 .sn-component .wrap {
   word-wrap: break-word;
+}
+.sn-component *.sk-base {
+  color: var(--sn-stylekit-foreground-color);
+}
+.sn-component *.contrast {
+  color: var(--sn-stylekit-contrast-foreground-color);
 }
 .sn-component *.neutral {
   color: var(--sn-stylekit-neutral-color);
@@ -422,9 +430,7 @@
   box-sizing: border-box;
   padding: 0.7rem 0.8rem;
   margin: 0.30rem 0;
-  border-radius: 3px;
-  border-width: 1px;
-  border-style: solid;
+  border: none;
   font-size: var(--sn-stylekit-font-size-h3);
   width: 100%;
   outline: 0;
@@ -483,41 +489,47 @@
   display: flex;
   width: 100%;
 }
-.sn-component .sk-button-group.stretch .sk-button, .sn-component .sk-button-group.stretch .sk-box, .sn-component .sk-button-group.stretch .sk-circle {
+.sn-component .sk-button-group.stretch .sk-button, .sn-component .sk-button-group.stretch .sk-box {
   display: block;
   flex-grow: 1;
   text-align: center;
 }
-.sn-component .sk-button-group .sk-button, .sn-component .sk-button-group .sk-box, .sn-component .sk-button-group .sk-circle {
+.sn-component .sk-button-group .sk-button, .sn-component .sk-button-group .sk-box {
   display: inline-block;
   vertical-align: middle;
 }
-.sn-component .sk-button-group .sk-button:not(:last-child), .sn-component .sk-button-group .sk-box:not(:last-child), .sn-component .sk-button-group .sk-circle:not(:last-child) {
+.sn-component .sk-button-group .sk-button:not(:last-child), .sn-component .sk-button-group .sk-box:not(:last-child) {
   margin-right: 5px;
 }
-.sn-component .sk-button-group .sk-button:not(:last-child).featured, .sn-component .sk-button-group .sk-box:not(:last-child).featured, .sn-component .sk-button-group .sk-circle:not(:last-child).featured {
+.sn-component .sk-button-group .sk-button:not(:last-child).featured, .sn-component .sk-button-group .sk-box:not(:last-child).featured {
   margin-right: 8px;
 }
 .sn-component .sk-segmented-buttons {
   display: flex;
   flex-direction: row;
 }
-.sn-component .sk-segmented-buttons .sk-button, .sn-component .sk-segmented-buttons .sk-box, .sn-component .sk-segmented-buttons .sk-circle {
+.sn-component .sk-segmented-buttons .sk-button, .sn-component .sk-segmented-buttons .sk-box {
   border-radius: 0;
   white-space: nowrap;
   margin: 0;
 }
-.sn-component .sk-segmented-buttons .sk-button:not(:last-child), .sn-component .sk-segmented-buttons .sk-box:not(:last-child), .sn-component .sk-segmented-buttons .sk-circle:not(:last-child) {
+.sn-component .sk-segmented-buttons .sk-button:not(:last-child), .sn-component .sk-segmented-buttons .sk-box:not(:last-child) {
   border-right: none;
+  border-radius: 0;
 }
-.sn-component .sk-segmented-buttons .sk-button:first-child, .sn-component .sk-segmented-buttons .sk-box:first-child, .sn-component .sk-segmented-buttons .sk-circle:first-child {
-  border-top-left-radius: 3px;
-  border-bottom-left-radius: 3px;
+.sn-component .sk-segmented-buttons .sk-button:first-child, .sn-component .sk-segmented-buttons .sk-box:first-child {
+  border-top-left-radius: var(--sn-stylekit-general-border-radius);
+  border-bottom-left-radius: var(--sn-stylekit-general-border-radius);
   border-right: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
-.sn-component .sk-segmented-buttons .sk-button:last-child, .sn-component .sk-segmented-buttons .sk-box:last-child, .sn-component .sk-segmented-buttons .sk-circle:last-child {
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
+.sn-component .sk-segmented-buttons .sk-button:last-child, .sn-component .sk-segmented-buttons .sk-box:last-child {
+  border-top-right-radius: var(--sn-stylekit-general-border-radius);
+  border-bottom-right-radius: var(--sn-stylekit-general-border-radius);
+  border-left: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 .sn-component .sk-box-group .sk-box {
   display: inline-block;
@@ -528,41 +540,53 @@
 .sn-component .sk-a.button {
   text-decoration: none;
 }
-.sn-component .sk-button, .sn-component .sk-box, .sn-component .sk-circle {
+.sn-component .sk-button, .sn-component .sk-box {
   display: table;
-  border-radius: 3px;
   padding: 0.5rem 0.7rem;
   font-size: var(--sn-stylekit-font-size-h5);
   cursor: pointer;
   text-align: center;
-  border: 1px solid;
   user-select: none;
 }
-.sn-component .sk-button.wide, .sn-component .wide.sk-box, .sn-component .wide.sk-circle {
+.sn-component .sk-button.no-hover-border:after, .sn-component .no-hover-border.sk-box:after {
+  color: transparent !important;
+}
+.sn-component .sk-button.wide, .sn-component .wide.sk-box {
   padding: 0.3rem 1.7rem;
 }
-.sn-component .sk-button > .sk-label, .sn-component .sk-box > .sk-label, .sn-component .sk-circle > .sk-label, .sn-component .sk-panel-section .sk-button > .sk-panel-section-subtitle, .sn-component .sk-panel-section .sk-box > .sk-panel-section-subtitle, .sn-component .sk-panel-section .sk-circle > .sk-panel-section-subtitle {
+.sn-component .sk-button > .sk-label, .sn-component .sk-box > .sk-label, .sn-component .sk-panel-section .sk-button > .sk-panel-section-subtitle, .sn-component .sk-panel-section .sk-box > .sk-panel-section-subtitle {
   font-weight: bold;
   display: block;
   text-align: center;
 }
-.sn-component .sk-button.big, .sn-component .big.sk-box, .sn-component .big.sk-circle {
+.sn-component .sk-button.big, .sn-component .big.sk-box {
   font-size: var(--sn-stylekit-font-size-h3);
   padding: 0.7rem 2.5rem;
 }
 .sn-component .sk-box {
   padding: 2.5rem 1.5rem;
 }
-.sn-component .sk-button.sk-base, .sn-component .sk-base.sk-box, .sn-component .sk-base.sk-circle, .sn-component .sk-box.sk-base, .sn-component .sk-circle.sk-base {
+.sn-component .sk-button.sk-base, .sn-component .sk-base.sk-box, .sn-component .sk-box.sk-base, .sn-component .sk-circle.sk-base {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-foreground-color);
   position: relative;
   background-color: var(--sn-stylekit-background-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-background-color);
 }
-.sn-component .sk-button.sk-base *, .sn-component .sk-base.sk-box *, .sn-component .sk-base.sk-circle *, .sn-component .sk-box.sk-base *, .sn-component .sk-circle.sk-base * {
+.sn-component .sk-button.sk-base *, .sn-component .sk-base.sk-box *, .sn-component .sk-box.sk-base *, .sn-component .sk-circle.sk-base * {
   position: relative;
 }
-.sn-component .sk-button.sk-base:before, .sn-component .sk-base.sk-box:before, .sn-component .sk-base.sk-circle:before, .sn-component .sk-box.sk-base:before, .sn-component .sk-circle.sk-base:before {
+.sn-component .sk-button.sk-base:before, .sn-component .sk-base.sk-box:before, .sn-component .sk-box.sk-base:before, .sn-component .sk-circle.sk-base:before {
   content: "";
   position: absolute;
   top: 0;
@@ -571,28 +595,59 @@
   height: 100%;
   background-color: var(--sn-stylekit-background-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
 }
-.sn-component .sk-button.sk-base:hover:before, .sn-component .sk-base.sk-box:hover:before, .sn-component .sk-base.sk-circle:hover:before, .sn-component .sk-box.sk-base:hover:before, .sn-component .sk-circle.sk-base:hover:before {
+.sn-component .sk-button.sk-base:after, .sn-component .sk-base.sk-box:after, .sn-component .sk-box.sk-base:after, .sn-component .sk-circle.sk-base:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-background-color);
+}
+.sn-component .sk-button.sk-base:hover:before, .sn-component .sk-base.sk-box:hover:before, .sn-component .sk-box.sk-base:hover:before, .sn-component .sk-circle.sk-base:hover:before {
   filter: brightness(130%);
 }
-.sn-component .sk-button.sk-base.featured, .sn-component .sk-base.featured.sk-box, .sn-component .sk-base.featured.sk-circle, .sn-component .sk-box.sk-base.featured, .sn-component .sk-circle.sk-base.featured {
+.sn-component .sk-button.sk-base.no-bg, .sn-component .sk-base.no-bg.sk-box, .sn-component .sk-box.sk-base.no-bg, .sn-component .sk-circle.sk-base.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-button.sk-base.no-bg:before, .sn-component .sk-base.no-bg.sk-box:before, .sn-component .sk-box.sk-base.no-bg:before, .sn-component .sk-circle.sk-base.no-bg:before {
+  content: none;
+}
+.sn-component .sk-button.sk-base.featured, .sn-component .sk-base.featured.sk-box, .sn-component .sk-box.sk-base.featured, .sn-component .sk-circle.sk-base.featured {
   border: none;
   padding: 0.75rem 1.25rem;
   font-size: var(--sn-stylekit-font-size-h3);
 }
-.sn-component .sk-button.sk-base.featured:before, .sn-component .sk-base.featured.sk-box:before, .sn-component .sk-base.featured.sk-circle:before, .sn-component .sk-box.sk-base.featured:before, .sn-component .sk-circle.sk-base.featured:before {
+.sn-component .sk-button.sk-base.featured:before, .sn-component .sk-base.featured.sk-box:before, .sn-component .sk-box.sk-base.featured:before, .sn-component .sk-circle.sk-base.featured:before {
   opacity: 1.0;
 }
-.sn-component .sk-button.contrast, .sn-component .contrast.sk-box, .sn-component .contrast.sk-circle, .sn-component .sk-box.contrast, .sn-component .sk-circle.contrast {
+.sn-component .sk-button.contrast, .sn-component .contrast.sk-box, .sn-component .sk-box.contrast, .sn-component .sk-circle.contrast {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-contrast-foreground-color);
   position: relative;
   background-color: var(--sn-stylekit-contrast-background-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-contrast-background-color);
 }
-.sn-component .sk-button.contrast *, .sn-component .contrast.sk-box *, .sn-component .contrast.sk-circle *, .sn-component .sk-box.contrast *, .sn-component .sk-circle.contrast * {
+.sn-component .sk-button.contrast *, .sn-component .contrast.sk-box *, .sn-component .sk-box.contrast *, .sn-component .sk-circle.contrast * {
   position: relative;
 }
-.sn-component .sk-button.contrast:before, .sn-component .contrast.sk-box:before, .sn-component .contrast.sk-circle:before, .sn-component .sk-box.contrast:before, .sn-component .sk-circle.contrast:before {
+.sn-component .sk-button.contrast:before, .sn-component .contrast.sk-box:before, .sn-component .sk-box.contrast:before, .sn-component .sk-circle.contrast:before {
   content: "";
   position: absolute;
   top: 0;
@@ -601,28 +656,59 @@
   height: 100%;
   background-color: var(--sn-stylekit-contrast-background-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
 }
-.sn-component .sk-button.contrast:hover:before, .sn-component .contrast.sk-box:hover:before, .sn-component .contrast.sk-circle:hover:before, .sn-component .sk-box.contrast:hover:before, .sn-component .sk-circle.contrast:hover:before {
+.sn-component .sk-button.contrast:after, .sn-component .contrast.sk-box:after, .sn-component .sk-box.contrast:after, .sn-component .sk-circle.contrast:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-contrast-background-color);
+}
+.sn-component .sk-button.contrast:hover:before, .sn-component .contrast.sk-box:hover:before, .sn-component .sk-box.contrast:hover:before, .sn-component .sk-circle.contrast:hover:before {
   filter: brightness(130%);
 }
-.sn-component .sk-button.contrast.featured, .sn-component .contrast.featured.sk-box, .sn-component .contrast.featured.sk-circle, .sn-component .sk-box.contrast.featured, .sn-component .sk-circle.contrast.featured {
+.sn-component .sk-button.contrast.no-bg, .sn-component .contrast.no-bg.sk-box, .sn-component .sk-box.contrast.no-bg, .sn-component .sk-circle.contrast.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-button.contrast.no-bg:before, .sn-component .contrast.no-bg.sk-box:before, .sn-component .sk-box.contrast.no-bg:before, .sn-component .sk-circle.contrast.no-bg:before {
+  content: none;
+}
+.sn-component .sk-button.contrast.featured, .sn-component .contrast.featured.sk-box, .sn-component .sk-box.contrast.featured, .sn-component .sk-circle.contrast.featured {
   border: none;
   padding: 0.75rem 1.25rem;
   font-size: var(--sn-stylekit-font-size-h3);
 }
-.sn-component .sk-button.contrast.featured:before, .sn-component .contrast.featured.sk-box:before, .sn-component .contrast.featured.sk-circle:before, .sn-component .sk-box.contrast.featured:before, .sn-component .sk-circle.contrast.featured:before {
+.sn-component .sk-button.contrast.featured:before, .sn-component .contrast.featured.sk-box:before, .sn-component .sk-box.contrast.featured:before, .sn-component .sk-circle.contrast.featured:before {
   opacity: 1.0;
 }
-.sn-component .sk-button.sk-secondary, .sn-component .sk-secondary.sk-box, .sn-component .sk-secondary.sk-circle, .sn-component .sk-box.sk-secondary, .sn-component .sk-circle.sk-secondary {
+.sn-component .sk-button.sk-secondary, .sn-component .sk-secondary.sk-box, .sn-component .sk-box.sk-secondary, .sn-component .sk-circle.sk-secondary {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-secondary-foreground-color);
   position: relative;
   background-color: var(--sn-stylekit-secondary-background-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-secondary-background-color);
 }
-.sn-component .sk-button.sk-secondary *, .sn-component .sk-secondary.sk-box *, .sn-component .sk-secondary.sk-circle *, .sn-component .sk-box.sk-secondary *, .sn-component .sk-circle.sk-secondary * {
+.sn-component .sk-button.sk-secondary *, .sn-component .sk-secondary.sk-box *, .sn-component .sk-box.sk-secondary *, .sn-component .sk-circle.sk-secondary * {
   position: relative;
 }
-.sn-component .sk-button.sk-secondary:before, .sn-component .sk-secondary.sk-box:before, .sn-component .sk-secondary.sk-circle:before, .sn-component .sk-box.sk-secondary:before, .sn-component .sk-circle.sk-secondary:before {
+.sn-component .sk-button.sk-secondary:before, .sn-component .sk-secondary.sk-box:before, .sn-component .sk-box.sk-secondary:before, .sn-component .sk-circle.sk-secondary:before {
   content: "";
   position: absolute;
   top: 0;
@@ -631,28 +717,59 @@
   height: 100%;
   background-color: var(--sn-stylekit-secondary-background-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
 }
-.sn-component .sk-button.sk-secondary:hover:before, .sn-component .sk-secondary.sk-box:hover:before, .sn-component .sk-secondary.sk-circle:hover:before, .sn-component .sk-box.sk-secondary:hover:before, .sn-component .sk-circle.sk-secondary:hover:before {
+.sn-component .sk-button.sk-secondary:after, .sn-component .sk-secondary.sk-box:after, .sn-component .sk-box.sk-secondary:after, .sn-component .sk-circle.sk-secondary:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-secondary-background-color);
+}
+.sn-component .sk-button.sk-secondary:hover:before, .sn-component .sk-secondary.sk-box:hover:before, .sn-component .sk-box.sk-secondary:hover:before, .sn-component .sk-circle.sk-secondary:hover:before {
   filter: brightness(130%);
 }
-.sn-component .sk-button.sk-secondary.featured, .sn-component .sk-secondary.featured.sk-box, .sn-component .sk-secondary.featured.sk-circle, .sn-component .sk-box.sk-secondary.featured, .sn-component .sk-circle.sk-secondary.featured {
+.sn-component .sk-button.sk-secondary.no-bg, .sn-component .sk-secondary.no-bg.sk-box, .sn-component .sk-box.sk-secondary.no-bg, .sn-component .sk-circle.sk-secondary.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-button.sk-secondary.no-bg:before, .sn-component .sk-secondary.no-bg.sk-box:before, .sn-component .sk-box.sk-secondary.no-bg:before, .sn-component .sk-circle.sk-secondary.no-bg:before {
+  content: none;
+}
+.sn-component .sk-button.sk-secondary.featured, .sn-component .sk-secondary.featured.sk-box, .sn-component .sk-box.sk-secondary.featured, .sn-component .sk-circle.sk-secondary.featured {
   border: none;
   padding: 0.75rem 1.25rem;
   font-size: var(--sn-stylekit-font-size-h3);
 }
-.sn-component .sk-button.sk-secondary.featured:before, .sn-component .sk-secondary.featured.sk-box:before, .sn-component .sk-secondary.featured.sk-circle:before, .sn-component .sk-box.sk-secondary.featured:before, .sn-component .sk-circle.sk-secondary.featured:before {
+.sn-component .sk-button.sk-secondary.featured:before, .sn-component .sk-secondary.featured.sk-box:before, .sn-component .sk-box.sk-secondary.featured:before, .sn-component .sk-circle.sk-secondary.featured:before {
   opacity: 1.0;
 }
-.sn-component .sk-button.sk-secondary-contrast, .sn-component .sk-secondary-contrast.sk-box, .sn-component .sk-secondary-contrast.sk-circle, .sn-component .sk-box.sk-secondary-contrast, .sn-component .sk-circle.sk-secondary-contrast {
+.sn-component .sk-button.sk-secondary-contrast, .sn-component .sk-secondary-contrast.sk-box, .sn-component .sk-box.sk-secondary-contrast, .sn-component .sk-circle.sk-secondary-contrast {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-secondary-contrast-foreground-color);
   position: relative;
   background-color: var(--sn-stylekit-secondary-contrast-background-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-secondary-contrast-background-color);
 }
-.sn-component .sk-button.sk-secondary-contrast *, .sn-component .sk-secondary-contrast.sk-box *, .sn-component .sk-secondary-contrast.sk-circle *, .sn-component .sk-box.sk-secondary-contrast *, .sn-component .sk-circle.sk-secondary-contrast * {
+.sn-component .sk-button.sk-secondary-contrast *, .sn-component .sk-secondary-contrast.sk-box *, .sn-component .sk-box.sk-secondary-contrast *, .sn-component .sk-circle.sk-secondary-contrast * {
   position: relative;
 }
-.sn-component .sk-button.sk-secondary-contrast:before, .sn-component .sk-secondary-contrast.sk-box:before, .sn-component .sk-secondary-contrast.sk-circle:before, .sn-component .sk-box.sk-secondary-contrast:before, .sn-component .sk-circle.sk-secondary-contrast:before {
+.sn-component .sk-button.sk-secondary-contrast:before, .sn-component .sk-secondary-contrast.sk-box:before, .sn-component .sk-box.sk-secondary-contrast:before, .sn-component .sk-circle.sk-secondary-contrast:before {
   content: "";
   position: absolute;
   top: 0;
@@ -661,28 +778,59 @@
   height: 100%;
   background-color: var(--sn-stylekit-secondary-contrast-background-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
 }
-.sn-component .sk-button.sk-secondary-contrast:hover:before, .sn-component .sk-secondary-contrast.sk-box:hover:before, .sn-component .sk-secondary-contrast.sk-circle:hover:before, .sn-component .sk-box.sk-secondary-contrast:hover:before, .sn-component .sk-circle.sk-secondary-contrast:hover:before {
+.sn-component .sk-button.sk-secondary-contrast:after, .sn-component .sk-secondary-contrast.sk-box:after, .sn-component .sk-box.sk-secondary-contrast:after, .sn-component .sk-circle.sk-secondary-contrast:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-secondary-contrast-background-color);
+}
+.sn-component .sk-button.sk-secondary-contrast:hover:before, .sn-component .sk-secondary-contrast.sk-box:hover:before, .sn-component .sk-box.sk-secondary-contrast:hover:before, .sn-component .sk-circle.sk-secondary-contrast:hover:before {
   filter: brightness(130%);
 }
-.sn-component .sk-button.sk-secondary-contrast.featured, .sn-component .sk-secondary-contrast.featured.sk-box, .sn-component .sk-secondary-contrast.featured.sk-circle, .sn-component .sk-box.sk-secondary-contrast.featured, .sn-component .sk-circle.sk-secondary-contrast.featured {
+.sn-component .sk-button.sk-secondary-contrast.no-bg, .sn-component .sk-secondary-contrast.no-bg.sk-box, .sn-component .sk-box.sk-secondary-contrast.no-bg, .sn-component .sk-circle.sk-secondary-contrast.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-button.sk-secondary-contrast.no-bg:before, .sn-component .sk-secondary-contrast.no-bg.sk-box:before, .sn-component .sk-box.sk-secondary-contrast.no-bg:before, .sn-component .sk-circle.sk-secondary-contrast.no-bg:before {
+  content: none;
+}
+.sn-component .sk-button.sk-secondary-contrast.featured, .sn-component .sk-secondary-contrast.featured.sk-box, .sn-component .sk-box.sk-secondary-contrast.featured, .sn-component .sk-circle.sk-secondary-contrast.featured {
   border: none;
   padding: 0.75rem 1.25rem;
   font-size: var(--sn-stylekit-font-size-h3);
 }
-.sn-component .sk-button.sk-secondary-contrast.featured:before, .sn-component .sk-secondary-contrast.featured.sk-box:before, .sn-component .sk-secondary-contrast.featured.sk-circle:before, .sn-component .sk-box.sk-secondary-contrast.featured:before, .sn-component .sk-circle.sk-secondary-contrast.featured:before {
+.sn-component .sk-button.sk-secondary-contrast.featured:before, .sn-component .sk-secondary-contrast.featured.sk-box:before, .sn-component .sk-box.sk-secondary-contrast.featured:before, .sn-component .sk-circle.sk-secondary-contrast.featured:before {
   opacity: 1.0;
 }
-.sn-component .sk-button.neutral, .sn-component .neutral.sk-box, .sn-component .neutral.sk-circle, .sn-component .sk-box.neutral, .sn-component .sk-circle.neutral {
+.sn-component .sk-button.neutral, .sn-component .neutral.sk-box, .sn-component .sk-box.neutral, .sn-component .sk-circle.neutral {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-neutral-contrast-color);
   position: relative;
   background-color: var(--sn-stylekit-neutral-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-neutral-color);
 }
-.sn-component .sk-button.neutral *, .sn-component .neutral.sk-box *, .sn-component .neutral.sk-circle *, .sn-component .sk-box.neutral *, .sn-component .sk-circle.neutral * {
+.sn-component .sk-button.neutral *, .sn-component .neutral.sk-box *, .sn-component .sk-box.neutral *, .sn-component .sk-circle.neutral * {
   position: relative;
 }
-.sn-component .sk-button.neutral:before, .sn-component .neutral.sk-box:before, .sn-component .neutral.sk-circle:before, .sn-component .sk-box.neutral:before, .sn-component .sk-circle.neutral:before {
+.sn-component .sk-button.neutral:before, .sn-component .neutral.sk-box:before, .sn-component .sk-box.neutral:before, .sn-component .sk-circle.neutral:before {
   content: "";
   position: absolute;
   top: 0;
@@ -691,28 +839,59 @@
   height: 100%;
   background-color: var(--sn-stylekit-neutral-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
 }
-.sn-component .sk-button.neutral:hover:before, .sn-component .neutral.sk-box:hover:before, .sn-component .neutral.sk-circle:hover:before, .sn-component .sk-box.neutral:hover:before, .sn-component .sk-circle.neutral:hover:before {
+.sn-component .sk-button.neutral:after, .sn-component .neutral.sk-box:after, .sn-component .sk-box.neutral:after, .sn-component .sk-circle.neutral:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-neutral-color);
+}
+.sn-component .sk-button.neutral:hover:before, .sn-component .neutral.sk-box:hover:before, .sn-component .sk-box.neutral:hover:before, .sn-component .sk-circle.neutral:hover:before {
   filter: brightness(130%);
 }
-.sn-component .sk-button.neutral.featured, .sn-component .neutral.featured.sk-box, .sn-component .neutral.featured.sk-circle, .sn-component .sk-box.neutral.featured, .sn-component .sk-circle.neutral.featured {
+.sn-component .sk-button.neutral.no-bg, .sn-component .neutral.no-bg.sk-box, .sn-component .sk-box.neutral.no-bg, .sn-component .sk-circle.neutral.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-button.neutral.no-bg:before, .sn-component .neutral.no-bg.sk-box:before, .sn-component .sk-box.neutral.no-bg:before, .sn-component .sk-circle.neutral.no-bg:before {
+  content: none;
+}
+.sn-component .sk-button.neutral.featured, .sn-component .neutral.featured.sk-box, .sn-component .sk-box.neutral.featured, .sn-component .sk-circle.neutral.featured {
   border: none;
   padding: 0.75rem 1.25rem;
   font-size: var(--sn-stylekit-font-size-h3);
 }
-.sn-component .sk-button.neutral.featured:before, .sn-component .neutral.featured.sk-box:before, .sn-component .neutral.featured.sk-circle:before, .sn-component .sk-box.neutral.featured:before, .sn-component .sk-circle.neutral.featured:before {
+.sn-component .sk-button.neutral.featured:before, .sn-component .neutral.featured.sk-box:before, .sn-component .sk-box.neutral.featured:before, .sn-component .sk-circle.neutral.featured:before {
   opacity: 1.0;
 }
-.sn-component .sk-button.info, .sn-component .info.sk-box, .sn-component .info.sk-circle, .sn-component .sk-box.info, .sn-component .sk-circle.info {
+.sn-component .sk-button.info, .sn-component .info.sk-box, .sn-component .sk-box.info, .sn-component .sk-circle.info {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-info-contrast-color);
   position: relative;
   background-color: var(--sn-stylekit-info-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-info-color);
 }
-.sn-component .sk-button.info *, .sn-component .info.sk-box *, .sn-component .info.sk-circle *, .sn-component .sk-box.info *, .sn-component .sk-circle.info * {
+.sn-component .sk-button.info *, .sn-component .info.sk-box *, .sn-component .sk-box.info *, .sn-component .sk-circle.info * {
   position: relative;
 }
-.sn-component .sk-button.info:before, .sn-component .info.sk-box:before, .sn-component .info.sk-circle:before, .sn-component .sk-box.info:before, .sn-component .sk-circle.info:before {
+.sn-component .sk-button.info:before, .sn-component .info.sk-box:before, .sn-component .sk-box.info:before, .sn-component .sk-circle.info:before {
   content: "";
   position: absolute;
   top: 0;
@@ -721,28 +900,59 @@
   height: 100%;
   background-color: var(--sn-stylekit-info-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
 }
-.sn-component .sk-button.info:hover:before, .sn-component .info.sk-box:hover:before, .sn-component .info.sk-circle:hover:before, .sn-component .sk-box.info:hover:before, .sn-component .sk-circle.info:hover:before {
+.sn-component .sk-button.info:after, .sn-component .info.sk-box:after, .sn-component .sk-box.info:after, .sn-component .sk-circle.info:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-info-color);
+}
+.sn-component .sk-button.info:hover:before, .sn-component .info.sk-box:hover:before, .sn-component .sk-box.info:hover:before, .sn-component .sk-circle.info:hover:before {
   filter: brightness(130%);
 }
-.sn-component .sk-button.info.featured, .sn-component .info.featured.sk-box, .sn-component .info.featured.sk-circle, .sn-component .sk-box.info.featured, .sn-component .sk-circle.info.featured {
+.sn-component .sk-button.info.no-bg, .sn-component .info.no-bg.sk-box, .sn-component .sk-box.info.no-bg, .sn-component .sk-circle.info.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-button.info.no-bg:before, .sn-component .info.no-bg.sk-box:before, .sn-component .sk-box.info.no-bg:before, .sn-component .sk-circle.info.no-bg:before {
+  content: none;
+}
+.sn-component .sk-button.info.featured, .sn-component .info.featured.sk-box, .sn-component .sk-box.info.featured, .sn-component .sk-circle.info.featured {
   border: none;
   padding: 0.75rem 1.25rem;
   font-size: var(--sn-stylekit-font-size-h3);
 }
-.sn-component .sk-button.info.featured:before, .sn-component .info.featured.sk-box:before, .sn-component .info.featured.sk-circle:before, .sn-component .sk-box.info.featured:before, .sn-component .sk-circle.info.featured:before {
+.sn-component .sk-button.info.featured:before, .sn-component .info.featured.sk-box:before, .sn-component .sk-box.info.featured:before, .sn-component .sk-circle.info.featured:before {
   opacity: 1.0;
 }
-.sn-component .sk-button.warning, .sn-component .warning.sk-box, .sn-component .warning.sk-circle, .sn-component .sk-box.warning, .sn-component .sk-circle.warning {
+.sn-component .sk-button.warning, .sn-component .warning.sk-box, .sn-component .sk-box.warning, .sn-component .sk-circle.warning {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-warning-contrast-color);
   position: relative;
   background-color: var(--sn-stylekit-warning-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-warning-color);
 }
-.sn-component .sk-button.warning *, .sn-component .warning.sk-box *, .sn-component .warning.sk-circle *, .sn-component .sk-box.warning *, .sn-component .sk-circle.warning * {
+.sn-component .sk-button.warning *, .sn-component .warning.sk-box *, .sn-component .sk-box.warning *, .sn-component .sk-circle.warning * {
   position: relative;
 }
-.sn-component .sk-button.warning:before, .sn-component .warning.sk-box:before, .sn-component .warning.sk-circle:before, .sn-component .sk-box.warning:before, .sn-component .sk-circle.warning:before {
+.sn-component .sk-button.warning:before, .sn-component .warning.sk-box:before, .sn-component .sk-box.warning:before, .sn-component .sk-circle.warning:before {
   content: "";
   position: absolute;
   top: 0;
@@ -751,28 +961,59 @@
   height: 100%;
   background-color: var(--sn-stylekit-warning-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
 }
-.sn-component .sk-button.warning:hover:before, .sn-component .warning.sk-box:hover:before, .sn-component .warning.sk-circle:hover:before, .sn-component .sk-box.warning:hover:before, .sn-component .sk-circle.warning:hover:before {
+.sn-component .sk-button.warning:after, .sn-component .warning.sk-box:after, .sn-component .sk-box.warning:after, .sn-component .sk-circle.warning:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-warning-color);
+}
+.sn-component .sk-button.warning:hover:before, .sn-component .warning.sk-box:hover:before, .sn-component .sk-box.warning:hover:before, .sn-component .sk-circle.warning:hover:before {
   filter: brightness(130%);
 }
-.sn-component .sk-button.warning.featured, .sn-component .warning.featured.sk-box, .sn-component .warning.featured.sk-circle, .sn-component .sk-box.warning.featured, .sn-component .sk-circle.warning.featured {
+.sn-component .sk-button.warning.no-bg, .sn-component .warning.no-bg.sk-box, .sn-component .sk-box.warning.no-bg, .sn-component .sk-circle.warning.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-button.warning.no-bg:before, .sn-component .warning.no-bg.sk-box:before, .sn-component .sk-box.warning.no-bg:before, .sn-component .sk-circle.warning.no-bg:before {
+  content: none;
+}
+.sn-component .sk-button.warning.featured, .sn-component .warning.featured.sk-box, .sn-component .sk-box.warning.featured, .sn-component .sk-circle.warning.featured {
   border: none;
   padding: 0.75rem 1.25rem;
   font-size: var(--sn-stylekit-font-size-h3);
 }
-.sn-component .sk-button.warning.featured:before, .sn-component .warning.featured.sk-box:before, .sn-component .warning.featured.sk-circle:before, .sn-component .sk-box.warning.featured:before, .sn-component .sk-circle.warning.featured:before {
+.sn-component .sk-button.warning.featured:before, .sn-component .warning.featured.sk-box:before, .sn-component .sk-box.warning.featured:before, .sn-component .sk-circle.warning.featured:before {
   opacity: 1.0;
 }
-.sn-component .sk-button.danger, .sn-component .danger.sk-box, .sn-component .danger.sk-circle, .sn-component .sk-box.danger, .sn-component .sk-circle.danger {
+.sn-component .sk-button.danger, .sn-component .danger.sk-box, .sn-component .sk-box.danger, .sn-component .sk-circle.danger {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-danger-contrast-color);
   position: relative;
   background-color: var(--sn-stylekit-danger-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-danger-color);
 }
-.sn-component .sk-button.danger *, .sn-component .danger.sk-box *, .sn-component .danger.sk-circle *, .sn-component .sk-box.danger *, .sn-component .sk-circle.danger * {
+.sn-component .sk-button.danger *, .sn-component .danger.sk-box *, .sn-component .sk-box.danger *, .sn-component .sk-circle.danger * {
   position: relative;
 }
-.sn-component .sk-button.danger:before, .sn-component .danger.sk-box:before, .sn-component .danger.sk-circle:before, .sn-component .sk-box.danger:before, .sn-component .sk-circle.danger:before {
+.sn-component .sk-button.danger:before, .sn-component .danger.sk-box:before, .sn-component .sk-box.danger:before, .sn-component .sk-circle.danger:before {
   content: "";
   position: absolute;
   top: 0;
@@ -781,28 +1022,59 @@
   height: 100%;
   background-color: var(--sn-stylekit-danger-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
 }
-.sn-component .sk-button.danger:hover:before, .sn-component .danger.sk-box:hover:before, .sn-component .danger.sk-circle:hover:before, .sn-component .sk-box.danger:hover:before, .sn-component .sk-circle.danger:hover:before {
+.sn-component .sk-button.danger:after, .sn-component .danger.sk-box:after, .sn-component .sk-box.danger:after, .sn-component .sk-circle.danger:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-danger-color);
+}
+.sn-component .sk-button.danger:hover:before, .sn-component .danger.sk-box:hover:before, .sn-component .sk-box.danger:hover:before, .sn-component .sk-circle.danger:hover:before {
   filter: brightness(130%);
 }
-.sn-component .sk-button.danger.featured, .sn-component .danger.featured.sk-box, .sn-component .danger.featured.sk-circle, .sn-component .sk-box.danger.featured, .sn-component .sk-circle.danger.featured {
+.sn-component .sk-button.danger.no-bg, .sn-component .danger.no-bg.sk-box, .sn-component .sk-box.danger.no-bg, .sn-component .sk-circle.danger.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-button.danger.no-bg:before, .sn-component .danger.no-bg.sk-box:before, .sn-component .sk-box.danger.no-bg:before, .sn-component .sk-circle.danger.no-bg:before {
+  content: none;
+}
+.sn-component .sk-button.danger.featured, .sn-component .danger.featured.sk-box, .sn-component .sk-box.danger.featured, .sn-component .sk-circle.danger.featured {
   border: none;
   padding: 0.75rem 1.25rem;
   font-size: var(--sn-stylekit-font-size-h3);
 }
-.sn-component .sk-button.danger.featured:before, .sn-component .danger.featured.sk-box:before, .sn-component .danger.featured.sk-circle:before, .sn-component .sk-box.danger.featured:before, .sn-component .sk-circle.danger.featured:before {
+.sn-component .sk-button.danger.featured:before, .sn-component .danger.featured.sk-box:before, .sn-component .sk-box.danger.featured:before, .sn-component .sk-circle.danger.featured:before {
   opacity: 1.0;
 }
-.sn-component .sk-button.success, .sn-component .success.sk-box, .sn-component .success.sk-circle, .sn-component .sk-box.success, .sn-component .sk-circle.success {
+.sn-component .sk-button.success, .sn-component .success.sk-box, .sn-component .sk-box.success, .sn-component .sk-circle.success {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-success-contrast-color);
   position: relative;
   background-color: var(--sn-stylekit-success-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-success-color);
 }
-.sn-component .sk-button.success *, .sn-component .success.sk-box *, .sn-component .success.sk-circle *, .sn-component .sk-box.success *, .sn-component .sk-circle.success * {
+.sn-component .sk-button.success *, .sn-component .success.sk-box *, .sn-component .sk-box.success *, .sn-component .sk-circle.success * {
   position: relative;
 }
-.sn-component .sk-button.success:before, .sn-component .success.sk-box:before, .sn-component .success.sk-circle:before, .sn-component .sk-box.success:before, .sn-component .sk-circle.success:before {
+.sn-component .sk-button.success:before, .sn-component .success.sk-box:before, .sn-component .sk-box.success:before, .sn-component .sk-circle.success:before {
   content: "";
   position: absolute;
   top: 0;
@@ -811,23 +1083,55 @@
   height: 100%;
   background-color: var(--sn-stylekit-success-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
 }
-.sn-component .sk-button.success:hover:before, .sn-component .success.sk-box:hover:before, .sn-component .success.sk-circle:hover:before, .sn-component .sk-box.success:hover:before, .sn-component .sk-circle.success:hover:before {
+.sn-component .sk-button.success:after, .sn-component .success.sk-box:after, .sn-component .sk-box.success:after, .sn-component .sk-circle.success:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-success-color);
+}
+.sn-component .sk-button.success:hover:before, .sn-component .success.sk-box:hover:before, .sn-component .sk-box.success:hover:before, .sn-component .sk-circle.success:hover:before {
   filter: brightness(130%);
 }
-.sn-component .sk-button.success.featured, .sn-component .success.featured.sk-box, .sn-component .success.featured.sk-circle, .sn-component .sk-box.success.featured, .sn-component .sk-circle.success.featured {
+.sn-component .sk-button.success.no-bg, .sn-component .success.no-bg.sk-box, .sn-component .sk-box.success.no-bg, .sn-component .sk-circle.success.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-button.success.no-bg:before, .sn-component .success.no-bg.sk-box:before, .sn-component .sk-box.success.no-bg:before, .sn-component .sk-circle.success.no-bg:before {
+  content: none;
+}
+.sn-component .sk-button.success.featured, .sn-component .success.featured.sk-box, .sn-component .sk-box.success.featured, .sn-component .sk-circle.success.featured {
   border: none;
   padding: 0.75rem 1.25rem;
   font-size: var(--sn-stylekit-font-size-h3);
 }
-.sn-component .sk-button.success.featured:before, .sn-component .success.featured.sk-box:before, .sn-component .success.featured.sk-circle:before, .sn-component .sk-box.success.featured:before, .sn-component .sk-circle.success.featured:before {
+.sn-component .sk-button.success.featured:before, .sn-component .success.featured.sk-box:before, .sn-component .sk-box.success.featured:before, .sn-component .sk-circle.success.featured:before {
   opacity: 1.0;
 }
 .sn-component .sk-notification.contrast, .sn-component .sk-input.contrast {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-contrast-foreground-color);
   position: relative;
   background-color: var(--sn-stylekit-contrast-background-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-contrast-border-color);
+  border: 1px solid var(--sn-stylekit-contrast-border-color);
 }
 .sn-component .sk-notification.contrast *, .sn-component .sk-input.contrast * {
   position: relative;
@@ -841,6 +1145,26 @@
   height: 100%;
   background-color: var(--sn-stylekit-contrast-background-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
+}
+.sn-component .sk-notification.contrast:after, .sn-component .sk-input.contrast:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  color: var(--sn-stylekit-contrast-border-color);
+  border-color: var(--sn-stylekit-contrast-border-color);
+}
+.sn-component .sk-notification.contrast.no-bg, .sn-component .sk-input.contrast.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-notification.contrast.no-bg:before, .sn-component .sk-input.contrast.no-bg:before {
+  content: none;
 }
 .sn-component .sk-notification.contrast.featured, .sn-component .sk-input.contrast.featured {
   border: none;
@@ -851,10 +1175,22 @@
   opacity: 1.0;
 }
 .sn-component .sk-notification.sk-secondary, .sn-component .sk-input.sk-secondary {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-secondary-foreground-color);
   position: relative;
   background-color: var(--sn-stylekit-secondary-background-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-secondary-border-color);
+  border: 1px solid var(--sn-stylekit-secondary-border-color);
 }
 .sn-component .sk-notification.sk-secondary *, .sn-component .sk-input.sk-secondary * {
   position: relative;
@@ -868,6 +1204,26 @@
   height: 100%;
   background-color: var(--sn-stylekit-secondary-background-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
+}
+.sn-component .sk-notification.sk-secondary:after, .sn-component .sk-input.sk-secondary:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  color: var(--sn-stylekit-secondary-border-color);
+  border-color: var(--sn-stylekit-secondary-border-color);
+}
+.sn-component .sk-notification.sk-secondary.no-bg, .sn-component .sk-input.sk-secondary.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-notification.sk-secondary.no-bg:before, .sn-component .sk-input.sk-secondary.no-bg:before {
+  content: none;
 }
 .sn-component .sk-notification.sk-secondary.featured, .sn-component .sk-input.sk-secondary.featured {
   border: none;
@@ -878,10 +1234,22 @@
   opacity: 1.0;
 }
 .sn-component .sk-notification.sk-secondary-contrast, .sn-component .sk-input.sk-secondary-contrast {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-secondary-contrast-foreground-color);
   position: relative;
   background-color: var(--sn-stylekit-secondary-contrast-background-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-secondary-contrast-border-color);
+  border: 1px solid var(--sn-stylekit-secondary-contrast-border-color);
 }
 .sn-component .sk-notification.sk-secondary-contrast *, .sn-component .sk-input.sk-secondary-contrast * {
   position: relative;
@@ -895,6 +1263,26 @@
   height: 100%;
   background-color: var(--sn-stylekit-secondary-contrast-background-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
+}
+.sn-component .sk-notification.sk-secondary-contrast:after, .sn-component .sk-input.sk-secondary-contrast:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  color: var(--sn-stylekit-secondary-contrast-border-color);
+  border-color: var(--sn-stylekit-secondary-contrast-border-color);
+}
+.sn-component .sk-notification.sk-secondary-contrast.no-bg, .sn-component .sk-input.sk-secondary-contrast.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-notification.sk-secondary-contrast.no-bg:before, .sn-component .sk-input.sk-secondary-contrast.no-bg:before {
+  content: none;
 }
 .sn-component .sk-notification.sk-secondary-contrast.featured, .sn-component .sk-input.sk-secondary-contrast.featured {
   border: none;
@@ -905,10 +1293,22 @@
   opacity: 1.0;
 }
 .sn-component .sk-notification.sk-base, .sn-component .sk-input.sk-base {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-foreground-color);
   position: relative;
   background-color: var(--sn-stylekit-background-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-border-color);
+  border: 1px solid var(--sn-stylekit-border-color);
 }
 .sn-component .sk-notification.sk-base *, .sn-component .sk-input.sk-base * {
   position: relative;
@@ -922,6 +1322,26 @@
   height: 100%;
   background-color: var(--sn-stylekit-background-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
+}
+.sn-component .sk-notification.sk-base:after, .sn-component .sk-input.sk-base:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  color: var(--sn-stylekit-border-color);
+  border-color: var(--sn-stylekit-border-color);
+}
+.sn-component .sk-notification.sk-base.no-bg, .sn-component .sk-input.sk-base.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-notification.sk-base.no-bg:before, .sn-component .sk-input.sk-base.no-bg:before {
+  content: none;
 }
 .sn-component .sk-notification.sk-base.featured, .sn-component .sk-input.sk-base.featured {
   border: none;
@@ -932,9 +1352,20 @@
   opacity: 1.0;
 }
 .sn-component .sk-notification.neutral, .sn-component .sk-input.neutral {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-neutral-contrast-color);
   position: relative;
   background-color: var(--sn-stylekit-neutral-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-neutral-color);
 }
 .sn-component .sk-notification.neutral *, .sn-component .sk-input.neutral * {
@@ -949,6 +1380,26 @@
   height: 100%;
   background-color: var(--sn-stylekit-neutral-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
+}
+.sn-component .sk-notification.neutral:after, .sn-component .sk-input.neutral:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-neutral-color);
+}
+.sn-component .sk-notification.neutral.no-bg, .sn-component .sk-input.neutral.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-notification.neutral.no-bg:before, .sn-component .sk-input.neutral.no-bg:before {
+  content: none;
 }
 .sn-component .sk-notification.neutral.featured, .sn-component .sk-input.neutral.featured {
   border: none;
@@ -959,9 +1410,20 @@
   opacity: 1.0;
 }
 .sn-component .sk-notification.info, .sn-component .sk-input.info {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-info-contrast-color);
   position: relative;
   background-color: var(--sn-stylekit-info-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-info-color);
 }
 .sn-component .sk-notification.info *, .sn-component .sk-input.info * {
@@ -976,6 +1438,26 @@
   height: 100%;
   background-color: var(--sn-stylekit-info-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
+}
+.sn-component .sk-notification.info:after, .sn-component .sk-input.info:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-info-color);
+}
+.sn-component .sk-notification.info.no-bg, .sn-component .sk-input.info.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-notification.info.no-bg:before, .sn-component .sk-input.info.no-bg:before {
+  content: none;
 }
 .sn-component .sk-notification.info.featured, .sn-component .sk-input.info.featured {
   border: none;
@@ -986,9 +1468,20 @@
   opacity: 1.0;
 }
 .sn-component .sk-notification.warning, .sn-component .sk-input.warning {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-warning-contrast-color);
   position: relative;
   background-color: var(--sn-stylekit-warning-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-warning-color);
 }
 .sn-component .sk-notification.warning *, .sn-component .sk-input.warning * {
@@ -1003,6 +1496,26 @@
   height: 100%;
   background-color: var(--sn-stylekit-warning-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
+}
+.sn-component .sk-notification.warning:after, .sn-component .sk-input.warning:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-warning-color);
+}
+.sn-component .sk-notification.warning.no-bg, .sn-component .sk-input.warning.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-notification.warning.no-bg:before, .sn-component .sk-input.warning.no-bg:before {
+  content: none;
 }
 .sn-component .sk-notification.warning.featured, .sn-component .sk-input.warning.featured {
   border: none;
@@ -1013,9 +1526,20 @@
   opacity: 1.0;
 }
 .sn-component .sk-notification.danger, .sn-component .sk-input.danger {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-danger-contrast-color);
   position: relative;
   background-color: var(--sn-stylekit-danger-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-danger-color);
 }
 .sn-component .sk-notification.danger *, .sn-component .sk-input.danger * {
@@ -1030,6 +1554,26 @@
   height: 100%;
   background-color: var(--sn-stylekit-danger-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
+}
+.sn-component .sk-notification.danger:after, .sn-component .sk-input.danger:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-danger-color);
+}
+.sn-component .sk-notification.danger.no-bg, .sn-component .sk-input.danger.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-notification.danger.no-bg:before, .sn-component .sk-input.danger.no-bg:before {
+  content: none;
 }
 .sn-component .sk-notification.danger.featured, .sn-component .sk-input.danger.featured {
   border: none;
@@ -1040,9 +1584,20 @@
   opacity: 1.0;
 }
 .sn-component .sk-notification.success, .sn-component .sk-input.success {
+  /*
+    If $border-color is supplied, we use traditional borders for rect.
+    Only sk-notification and sk-input will supply their own border color because inputs don't seem to support inset shadow borders.
+    If not, and we're inerferring border from other colors, we use box-shadow, so that we get rounded borders
+  */
   color: var(--sn-stylekit-success-contrast-color);
   position: relative;
   background-color: var(--sn-stylekit-success-color);
+  overflow: hidden;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  /*
+    We use box-shadow instead of border so that the borders are rounded properly around the rect.
+    We keep border-color as well incase the individual elements want a border in some cases.
+  */
   border-color: var(--sn-stylekit-success-color);
 }
 .sn-component .sk-notification.success *, .sn-component .sk-input.success * {
@@ -1057,6 +1612,26 @@
   height: 100%;
   background-color: var(--sn-stylekit-success-color);
   opacity: 1.0;
+  border-radius: var(--sn-stylekit-general-border-radius);
+}
+.sn-component .sk-notification.success:after, .sn-component .sk-input.success:after {
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: var(--sn-stylekit-general-border-radius);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px;
+  color: var(--sn-stylekit-success-color);
+}
+.sn-component .sk-notification.success.no-bg, .sn-component .sk-input.success.no-bg {
+  background-color: transparent;
+}
+.sn-component .sk-notification.success.no-bg:before, .sn-component .sk-input.success.no-bg:before {
+  content: none;
 }
 .sn-component .sk-notification.success.featured, .sn-component .sk-input.success.featured {
   border: none;
@@ -1067,11 +1642,9 @@
   opacity: 1.0;
 }
 .sn-component .sk-notification {
-  border: 1px solid;
   padding: 1.1rem 1rem;
   margin: 1.4rem 0;
   text-align: left;
-  border-radius: 0.2rem;
   cursor: default;
 }
 .sn-component .sk-notification.one-line {
@@ -1083,6 +1656,9 @@
 .sn-component .sk-notification.dashed {
   border-style: dashed;
   border-width: 2px;
+}
+.sn-component .sk-notification.dashed:after {
+  box-shadow: none;
 }
 .sn-component .sk-notification .sk-notification-title {
   font-size: var(--sn-stylekit-font-size-h1);
@@ -1096,14 +1672,19 @@
   font-weight: normal;
 }
 .sn-component .sk-circle {
+  border: 1px solid;
+  cursor: pointer;
   border-color: var(--sn-stylekit-contrast-foreground-color);
   background-color: var(--sn-stylekit-contrast-background-color);
   padding: 0;
-  border-radius: 50%;
+  border-radius: 50% !important;
   flex-shrink: 0;
 }
 .sn-component .sk-circle:before {
-  border-radius: 50%;
+  border-radius: 50% !important;
+}
+.sn-component .sk-circle:after {
+  border-radius: 50% !important;
 }
 .sn-component .sk-circle.small {
   width: 11px;
@@ -1151,7 +1732,7 @@
   display: flex;
   width: 100%;
   height: 2rem;
-  padding: 0.1rem 0.8rem;
+  padding: 0.0rem 0.8rem;
   background-color: var(--sn-stylekit-contrast-background-color);
   justify-content: space-between;
   align-items: center;
@@ -1186,6 +1767,9 @@
 }
 .sn-component .sk-app-bar .sk-app-bar-item > .sk-app-bar-item-column:not(:first-child) {
   margin-left: 0.5rem;
+}
+.sn-component .sk-app-bar .sk-app-bar-item > .sk-app-bar-item-column.underline {
+  border-bottom: 2px solid var(--sn-stylekit-info-color);
 }
 .sn-component .sk-app-bar .sk-app-bar-item.no-pointer {
   cursor: default;
@@ -1255,6 +1839,13 @@
 }
 .sn-component.no-select {
   user-select: none;
+}
+
+/* Goes outside of .sn-component declaration, as following properties are global */
+input,
+textarea,
+[contenteditable] {
+  caret-color: var(--sn-stylekit-editor-foreground-color);
 }
 
 .windows-web ::-webkit-scrollbar, .windows-desktop ::-webkit-scrollbar, .linux-web ::-webkit-scrollbar, .linux-desktop ::-webkit-scrollbar {
