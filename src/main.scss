@@ -16,6 +16,7 @@ body, html {
 .editor-toolbar, .editor-toolbar.fullscreen {
   background-color: var(--sn-stylekit-contrast-background-color);
   border-bottom: 1px solid var(--sn-stylekit-border-color);
+  overflow: visible; // on windows, if window is too small, horizontal scrollbar will appear fixed without this
 
   &::before, &::after {
     background: none !important;
@@ -160,4 +161,11 @@ body, html {
   background-color: var(--sn-stylekit-background-color) !important;
   color: var(--sn-stylekit-editor-foreground-color) !important;
   border-color: var(--sn-stylekit-border-color) !important;
+}
+
+// remove built in simplemde rule
+@media only screen and (max-width: 700px) {
+  .editor-toolbar a.no-mobile {
+    display: inline-block;
+}
 }

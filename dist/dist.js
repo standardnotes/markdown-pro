@@ -628,7 +628,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   var workingNote;
 
-  var componentManager = new ComponentManager();
+  var componentManager = new ComponentManager(null, function () {
+    // on ready
+    var platform = componentManager.platform;
+    if (platform) {
+      document.body.classList.add(platform);
+    }
+  });
 
   var ignoreTextChange = false;
   var initialLoad = true;
