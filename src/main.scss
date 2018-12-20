@@ -56,6 +56,10 @@ body, html {
     color: var(--sn-stylekit-info-color);
   }
 
+  img {
+    max-width: 100%;
+  }
+
   pre {
     background: var(--sn-stylekit-background-color);
     color: var(--sn-stylekit-foreground-color);
