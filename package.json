@@ -1,6 +1,6 @@
 {
   "name": "sn-advanced-markdown-editor",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "",
   "main": "dist/dist.js",
   "author": "",
@@ -23,6 +23,6 @@
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-sass": "^1.0.0",
-    "sn-stylekit": "2.0.12"
+    "sn-stylekit": "2.0.13"
   }
 }

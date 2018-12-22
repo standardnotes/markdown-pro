@@ -4,11 +4,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   var componentManager = new ComponentManager(null, () => {
     // on ready
-    var platform = componentManager.platform;
-    if(platform) {
-      document.body.classList.add(platform);
-    }
-
+    document.body.classList.add(componentManager.platform);
+    document.body.classList.add(componentManager.environment);
   });
 
   var ignoreTextChange = false;

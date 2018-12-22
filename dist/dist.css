@@ -10,6 +10,10 @@
   background-color: transparent;
 }
 
+.mobile .editor-toolbar, .mobile .editor-toolbar.fullscreen, .mac-web .editor-toolbar, .mac-web .editor-toolbar.fullscreen, .mac-desktop .editor-toolbar, .mac-desktop .editor-toolbar.fullscreen {
+  overflow-x: auto;
+}
+
 .CodeMirror {
   border-left: 0;
   border-right: 0;
@@ -17,6 +21,7 @@
   background-color: transparent;
   border: none;
   font-size: var(--sn-stylekit-font-size-editor);
+  -webkit-overflow-scrolling: touch;
 }
 
 .editor-toolbar, .editor-toolbar.fullscreen {
@@ -58,6 +63,9 @@
 }
 .editor-preview-active a, .editor-preview-active-side a {
   color: var(--sn-stylekit-info-color);
+}
+.editor-preview-active img, .editor-preview-active-side img {
+  max-width: 100%;
 }
 .editor-preview-active pre, .editor-preview-active-side pre {
   background: var(--sn-stylekit-background-color);
@@ -594,6 +602,7 @@
   resize: none;
 }
 .sn-component input.sk-input.clear {
+  color: var(--sn-stylekit-foreground-color);
   background-color: transparent;
   border: none;
 }

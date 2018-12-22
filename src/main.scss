@@ -4,6 +4,12 @@ body, html {
   background-color: transparent;
 }
 
+.mobile, .mac-web, .mac-desktop {
+  .editor-toolbar, .editor-toolbar.fullscreen {
+    overflow-x: auto;
+  }
+}
+
 .CodeMirror {
   border-left: 0;
   border-right: 0;
@@ -11,6 +17,8 @@ body, html {
   background-color: transparent;
   border: none;
   font-size: var(--sn-stylekit-font-size-editor);
+  // For momentum scrolling on mobile
+  -webkit-overflow-scrolling: touch;
 }
 
 .editor-toolbar, .editor-toolbar.fullscreen {
