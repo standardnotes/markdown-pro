@@ -133,6 +133,11 @@ body, html {
     color: var(--sn-stylekit-info-color);
     font-family: Consolas,monaco,"Ubuntu Mono",courier,monospace!important;
     font-size: 90%; // font-family makes font look a bit big
+
+    &.CodeMirror-selectedtext {
+      color: var(--sn-stylekit-info-contrast-color) !important;
+      background: transparent;
+    }
   }
 
   .cm-header {
@@ -146,13 +151,24 @@ body, html {
 
   .cm-variable-2 {
     color: var(--sn-stylekit-info-color) !important;
+
+    &.CodeMirror-selectedtext {
+      color: var(--sn-stylekit-info-contrast-color) !important;
+      background: transparent;
+    }
   }
 
   .cm-link, .cm-string, .cm-keyword {
     color: var(--sn-stylekit-info-color) !important;
+
+    &.CodeMirror-selectedtext {
+      color: var(--sn-stylekit-info-contrast-color) !important;
+      background: transparent;
+    }
   }
 
-  .CodeMirror-linenumber { color: gray !important;
+  .CodeMirror-linenumber {
+    color: gray !important;
   }
 
 }

@@ -125,6 +125,10 @@
   font-family: Consolas, monaco, "Ubuntu Mono", courier, monospace !important;
   font-size: 90%;
 }
+.CodeMirror .CodeMirror-code .cm-comment.CodeMirror-selectedtext {
+  color: var(--sn-stylekit-info-contrast-color) !important;
+  background: transparent;
+}
 .CodeMirror .cm-header {
   color: var(--sn-stylekit-editor-foreground-color);
 }
@@ -134,8 +138,16 @@
 .CodeMirror .cm-variable-2 {
   color: var(--sn-stylekit-info-color) !important;
 }
+.CodeMirror .cm-variable-2.CodeMirror-selectedtext {
+  color: var(--sn-stylekit-info-contrast-color) !important;
+  background: transparent;
+}
 .CodeMirror .cm-link, .CodeMirror .cm-string, .CodeMirror .cm-keyword {
   color: var(--sn-stylekit-info-color) !important;
+}
+.CodeMirror .cm-link.CodeMirror-selectedtext, .CodeMirror .cm-string.CodeMirror-selectedtext, .CodeMirror .cm-keyword.CodeMirror-selectedtext {
+  color: var(--sn-stylekit-info-contrast-color) !important;
+  background: transparent;
 }
 .CodeMirror .CodeMirror-linenumber {
   color: gray !important;
