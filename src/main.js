@@ -47,6 +47,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
      element: document.getElementById("editor"),
      spellChecker: false,
      status: false,
+     shortcuts: {
+       toggleSideBySide: "Cmd-Alt-P"
+     },
      toolbar:[
            "heading", "bold", "italic", "strikethrough",
            "|", "quote", "code",
