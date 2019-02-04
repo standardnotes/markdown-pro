@@ -136,12 +136,16 @@ body, html {
 
     &.CodeMirror-selectedtext {
       color: var(--sn-stylekit-info-contrast-color) !important;
-      background: transparent;
+      background: var(--sn-stylekit-info-color) !important;
     }
   }
 
   .cm-header {
     color: var(--sn-stylekit-editor-foreground-color);
+    &.CodeMirror-selectedtext {
+      color: var(--sn-stylekit-info-contrast-color) !important;
+      background: var(--sn-stylekit-info-color) !important;;
+    }
   }
 
   // Faded Markdown syntax
@@ -149,21 +153,27 @@ body, html {
     opacity: 0.2;
   }
 
-  .cm-variable-2 {
-    color: var(--sn-stylekit-info-color) !important;
+  .cm-link, .cm-url {
+    &.cm-variable-2 {
+      color: var(--sn-stylekit-info-color) !important;
 
-    &.CodeMirror-selectedtext {
-      color: var(--sn-stylekit-info-contrast-color) !important;
-      background: transparent;
+      &.CodeMirror-selectedtext {
+        color: var(--sn-stylekit-info-contrast-color) !important;
+        background: var(--sn-stylekit-info-color) !important;;
+      }
     }
   }
 
-  .cm-link, .cm-string, .cm-keyword {
+  .cm-formatting-list-ol {
+    font-weight: bold;
+  }
+
+  .cm-link, .cm-string {
     color: var(--sn-stylekit-info-color) !important;
 
     &.CodeMirror-selectedtext {
       color: var(--sn-stylekit-info-contrast-color) !important;
-      background: transparent;
+      background: var(--sn-stylekit-info-color) !important;;
     }
   }
 
@@ -183,6 +193,7 @@ body, html {
 
 .CodeMirror-selectedtext {
   color: var(--sn-stylekit-info-contrast-color);
+  background: var(--sn-stylekit-info-color) !important;
 }
 
 .CodeMirror-gutters {

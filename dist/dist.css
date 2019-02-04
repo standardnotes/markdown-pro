@@ -127,27 +127,34 @@
 }
 .CodeMirror .CodeMirror-code .cm-comment.CodeMirror-selectedtext {
   color: var(--sn-stylekit-info-contrast-color) !important;
-  background: transparent;
+  background: var(--sn-stylekit-info-color) !important;
 }
 .CodeMirror .cm-header {
   color: var(--sn-stylekit-editor-foreground-color);
 }
+.CodeMirror .cm-header.CodeMirror-selectedtext {
+  color: var(--sn-stylekit-info-contrast-color) !important;
+  background: var(--sn-stylekit-info-color) !important;
+}
 .CodeMirror .cm-formatting-header, .CodeMirror .cm-formatting-strong, .CodeMirror .cm-formatting-em {
   opacity: 0.2;
 }
-.CodeMirror .cm-variable-2 {
+.CodeMirror .cm-link.cm-variable-2, .CodeMirror .cm-url.cm-variable-2 {
   color: var(--sn-stylekit-info-color) !important;
 }
-.CodeMirror .cm-variable-2.CodeMirror-selectedtext {
+.CodeMirror .cm-link.cm-variable-2.CodeMirror-selectedtext, .CodeMirror .cm-url.cm-variable-2.CodeMirror-selectedtext {
   color: var(--sn-stylekit-info-contrast-color) !important;
-  background: transparent;
+  background: var(--sn-stylekit-info-color) !important;
 }
-.CodeMirror .cm-link, .CodeMirror .cm-string, .CodeMirror .cm-keyword {
+.CodeMirror .cm-formatting-list-ol {
+  font-weight: bold;
+}
+.CodeMirror .cm-link, .CodeMirror .cm-string {
   color: var(--sn-stylekit-info-color) !important;
 }
-.CodeMirror .cm-link.CodeMirror-selectedtext, .CodeMirror .cm-string.CodeMirror-selectedtext, .CodeMirror .cm-keyword.CodeMirror-selectedtext {
+.CodeMirror .cm-link.CodeMirror-selectedtext, .CodeMirror .cm-string.CodeMirror-selectedtext {
   color: var(--sn-stylekit-info-contrast-color) !important;
-  background: transparent;
+  background: var(--sn-stylekit-info-color) !important;
 }
 .CodeMirror .CodeMirror-linenumber {
   color: gray !important;
@@ -163,6 +170,7 @@
 
 .CodeMirror-selectedtext {
   color: var(--sn-stylekit-info-contrast-color);
+  background: var(--sn-stylekit-info-color) !important;
 }
 
 .CodeMirror-gutters {

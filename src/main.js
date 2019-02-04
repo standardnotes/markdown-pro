@@ -66,6 +66,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
      window.simplemde.toggleFullScreen();
    } catch (e) {}
 
+   /*
+    Can be set to Infinity to make sure the whole document is always rendered, and thus the browser's text search works on it. This will have bad effects on performance of big documents.
+    Really bad performance on Safari. Unusable.
+    */
+  window.simplemde.codemirror.setOption("viewportMargin", 100);
+
   window.simplemde.codemirror.on("change", function() {
 
     function strip(html) {
