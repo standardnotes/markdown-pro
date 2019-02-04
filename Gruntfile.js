@@ -65,7 +65,7 @@ module.exports = function(grunt) {
       lib: {
         src: [
           'vendor/*.js',
-          "node_modules/simplemde/dist/simplemde.min.js",
+          "node_modules/easymde/dist/easymde.min.js",
           "node_modules/sn-components-api/dist/dist.js"
         ],
         dest: 'dist/lib.js',
@@ -80,7 +80,7 @@ module.exports = function(grunt) {
         options: {
           separator: '',
         },
-        src: ['node_modules/simplemde/dist/simplemde.min.css', 'dist/app.css', 'node_modules/sn-stylekit/dist/stylekit.css'],
+        src: ['node_modules/easymde/dist/easymde.min.css', 'dist/app.css', 'node_modules/sn-stylekit/dist/stylekit.css'],
         dest: 'dist/dist.css',
       }
     },

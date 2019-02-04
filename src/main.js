@@ -24,26 +24,26 @@ document.addEventListener("DOMContentLoaded", function(event) {
     workingNote = note;
 
      // Only update UI on non-metadata updates.
-    if(note.isMetadataUpdate || !window.simplemde) {
+    if(note.isMetadataUpdate || !window.easymde) {
       return;
     }
 
     if(note.content.text !== lastValue) {
       ignoreTextChange = true;
-      window.simplemde.value(note.content.text);
+      window.easymde.value(note.content.text);
       ignoreTextChange = false;
     }
 
     if(initialLoad) {
       initialLoad = false;
-      window.simplemde.codemirror.getDoc().clearHistory();
-      if(window.simplemde.isPreviewActive()) {
-        window.simplemde.togglePreview();
+      window.easymde.codemirror.getDoc().clearHistory();
+      if(window.easymde.isPreviewActive()) {
+        window.easymde.togglePreview();
       }
     }
   });
 
-  window.simplemde = new SimpleMDE({
+  window.easymde = new EasyMDE({
      element: document.getElementById("editor"),
      spellChecker: false,
      status: false,
@@ -57,22 +57,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
            "|", "clean-block",
            "|", "link", "image",
            "|", "table",
-           "|", "preview", "side-by-side", "fullscreen"
+           "|", "preview", "side-by-side"
            ],
    });
 
    // Some sort of issue on Mobile RN where this causes an exception (".className is not defined")
    try {
-     window.simplemde.toggleFullScreen();
+     window.easymde.toggleFullScreen();
    } catch (e) {}
 
    /*
     Can be set to Infinity to make sure the whole document is always rendered, and thus the browser's text search works on it. This will have bad effects on performance of big documents.
     Really bad performance on Safari. Unusable.
     */
-  window.simplemde.codemirror.setOption("viewportMargin", 100);
+  window.easymde.codemirror.setOption("viewportMargin", 100);
 
-  window.simplemde.codemirror.on("change", function() {
+  window.easymde.codemirror.on("change", function() {
 
     function strip(html) {
       var tmp = document.implementation.createHTMLDocument("New").body;
@@ -96,9 +96,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let note = workingNote;
 
         componentManager.saveItemWithPresave(note, () => {
-          lastValue = window.simplemde.value();
+          lastValue = window.easymde.value();
 
-          var html = window.simplemde.options.previewRender(window.simplemde.value());
+          var html = window.easymde.options.previewRender(window.easymde.value());
           var strippedHtml = truncateString(strip(html));
 
           note.content.preview_plain = strippedHtml;

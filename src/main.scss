@@ -37,18 +37,19 @@ body, html {
   border-right-color: var(--sn-stylekit-contrast-background-color);
 }
 
-.editor-toolbar a {
+.editor-toolbar button {
   color: var(--sn-stylekit-info-color) !important;
   outline: none;
   border-radius: 0;
+  font-size: var(--sn-stylekit-base-font-size);
 }
 
-.editor-toolbar a.active, .editor-toolbar a:hover {
+.editor-toolbar button.active, .editor-toolbar button:hover {
   border-color: transparent;
   background: var(--sn-stylekit-background-color);
 }
 
-.editor-toolbar.disabled-for-preview a:not(.no-disable) {
+.editor-toolbar.disabled-for-preview button:not(.no-disable) {
   background: inherit;
 }
 
@@ -206,5 +207,5 @@ body, html {
 @media only screen and (max-width: 700px) {
   .editor-toolbar a.no-mobile {
     display: inline-block;
-}
+  }
 }
