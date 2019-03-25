@@ -10,6 +10,11 @@ body, html {
   }
 }
 
+.editor-toolbar.fullscreen, .CodeMirror-fullscreen {
+  // On Mobile, resizing the webview to avoid keyboard causes the option bar to be offset because its position is fixed.
+  position: absolute !important
+}
+
 .CodeMirror {
   border-left: 0;
   border-right: 0;

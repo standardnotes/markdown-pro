@@ -14,6 +14,10 @@
   overflow-x: auto;
 }
 
+.editor-toolbar.fullscreen, .CodeMirror-fullscreen {
+  position: absolute !important;
+}
+
 .CodeMirror {
   border-left: 0;
   border-right: 0;
