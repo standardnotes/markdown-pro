@@ -4,6 +4,11 @@ body, html {
   background-color: transparent;
 }
 
+* {
+  // To prevent gray flash when focusing input on mobile Safari
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 .mobile, .mac-web, .mac-desktop {
   .editor-toolbar, .editor-toolbar.fullscreen {
     overflow-x: auto;
