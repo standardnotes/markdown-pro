@@ -34,9 +34,9 @@ var ComponentManager = function () {
     value: function registerMessageHandler() {
       var _this = this;
 
-      var messageHandler = function messageHandler(event, mobileSource) {
+      var messageHandler = function messageHandler(event) {
         if (_this.loggingEnabled) {
-          console.log("Components API Message received:", event.data, "mobile?", mobileSource);
+          console.log("Components API Message received:", event.data);
         }
 
         // The first message will be the most reliable one, so we won't change it after any subsequent events,
@@ -44,21 +44,30 @@ var ComponentManager = function () {
         if (!_this.origin) {
           _this.origin = event.origin;
         }
-        _this.mobileSource = mobileSource;
-        // If from mobile app, JSON needs to be used.
-        var data = mobileSource ? JSON.parse(event.data) : event.data;
-        _this.handleMessage(data);
+
+        // Mobile environment sends data as JSON string
+        var data = event.data;
+        var parsedData = typeof data === "string" ? JSON.parse(data) : data;
+        _this.handleMessage(parsedData);
       };
 
-      // Mobile (React Native) uses `document`, web/desktop uses `window`.addEventListener
-      // for postMessage API to work properly.
+      /*
+        Mobile (React Native) uses `document`, web/desktop uses `window`.addEventListener
+        for postMessage API to work properly.
+         Update May 2019:
+        As part of transitioning React Native webview into the community package,
+        we'll now only need to use window.addEventListener.
+         However, we want to maintain backward compatibility for Mobile < v3.0.5, so we'll keep document.addEventListener
+         Also, even with the new version of react-native-webview, Android may still require document.addEventListener (while iOS still only requires window.addEventListener)
+        https://github.com/react-native-community/react-native-webview/issues/323#issuecomment-467767933
+       */
 
       document.addEventListener("message", function (event) {
-        messageHandler(event, true);
+        messageHandler(event);
       }, false);
 
       window.addEventListener("message", function (event) {
-        messageHandler(event, false);
+        messageHandler(event);
       }, false);
     }
   }, {
@@ -96,6 +105,11 @@ var ComponentManager = function () {
   }, {
     key: "onReady",
     value: function onReady(data) {
+      this.environment = data.environment;
+      this.platform = data.platform;
+      this.uuid = data.uuid;
+      this.isMobile = this.environment == "mobile";
+
       if (this.initialPermissions && this.initialPermissions.length > 0) {
         this.requestPermissions(this.initialPermissions);
       }
@@ -126,9 +140,6 @@ var ComponentManager = function () {
       }
 
       this.messageQueue = [];
-      this.environment = data.environment;
-      this.platform = data.platform;
-      this.uuid = data.uuid;
 
       if (this.loggingEnabled) {
         console.log("onReadyData", data);
@@ -192,7 +203,7 @@ var ComponentManager = function () {
       this.sentMessages.push(sentMessage);
 
       // Mobile (React Native) requires a string for the postMessage API.
-      if (this.mobileSource) {
+      if (this.isMobile) {
         message = JSON.stringify(message);
       }
 
@@ -355,14 +366,36 @@ var ComponentManager = function () {
       var skipDebouncer = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var presave = arguments[3];
 
-      var saveBlock = function saveBlock() {
+      var saveBlock = function saveBlock(itemsToSave) {
         // presave block allows client to gain the benefit of performing something in the debounce cycle.
         presave && presave();
 
-        var mappedItems = items.map(function (item) {
-          item.updated_at = new Date();
-          return this.jsonObjectForItem(item);
-        }.bind(_this3));
+        var mappedItems = [];
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = itemsToSave[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var item = _step2.value;
+
+            item.updated_at = new Date();
+            mappedItems.push(_this3.jsonObjectForItem(item));
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
 
         _this3.postMessage("save-items", { items: mappedItems }, function (data) {
           callback && callback();
@@ -377,17 +410,37 @@ var ComponentManager = function () {
         the save will finally trigger.
          Note: it's important to modify saving items updated_at immediately and not after delay. If you modify after delay,
         a delayed sync could just be wrapping up, and will send back old data and replace what the user has typed.
-      */
+       */
+
+      // We also need to make sure that when we clear a pending save timeout, we carry over those pending items into the new save.
+      if (!this.pendingSaveItems) {
+        this.pendingSaveItems = [];
+      }
+
       if (this.coallesedSaving == true && !skipDebouncer) {
         if (this.pendingSave) {
           clearTimeout(this.pendingSave);
         }
 
+        var incomingIds = items.map(function (item) {
+          return item.uuid;
+        });
+
+        // Replace any existing save items with incoming values
+        // Only keep items here who are not in incomingIds
+        this.pendingSaveItems = this.pendingSaveItems.filter(function (item) {
+          return !incomingIds.includes(item.uuid);
+        });
+
+        // Add new items, now that we've made sure it's cleared of incoming items.
+        this.pendingSaveItems = this.pendingSaveItems.concat(items);
         this.pendingSave = setTimeout(function () {
-          saveBlock();
+          saveBlock(_this3.pendingSaveItems);
+          // Clear pending save items
+          _this3.pendingSaveItems = [];
         }, this.coallesedSavingDelay);
       } else {
-        saveBlock();
+        saveBlock(items);
       }
     }
   }, {
@@ -426,13 +479,13 @@ var ComponentManager = function () {
       var themesToActivate = incomingUrls || [];
       var themesToDeactivate = [];
 
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
 
       try {
-        for (var _iterator2 = this.activeThemes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var activeUrl = _step2.value;
+        for (var _iterator3 = this.activeThemes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var activeUrl = _step3.value;
 
           if (!incomingUrls.includes(activeUrl)) {
             // active not present in incoming, deactivate it
@@ -443,36 +496,6 @@ var ComponentManager = function () {
               return candidate != activeUrl;
             });
           }
-        }
-      } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
-      }
-
-      if (this.loggingEnabled) {
-        console.log("Deactivating themes:", themesToDeactivate);
-        console.log("Activating themes:", themesToActivate);
-      }
-
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
-
-      try {
-        for (var _iterator3 = themesToDeactivate[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-          var theme = _step3.value;
-
-          this.deactivateTheme(theme);
         }
       } catch (err) {
         _didIteratorError3 = true;
@@ -489,15 +512,45 @@ var ComponentManager = function () {
         }
       }
 
-      this.activeThemes = incomingUrls;
+      if (this.loggingEnabled) {
+        console.log("Deactivating themes:", themesToDeactivate);
+        console.log("Activating themes:", themesToActivate);
+      }
 
       var _iteratorNormalCompletion4 = true;
       var _didIteratorError4 = false;
       var _iteratorError4 = undefined;
 
       try {
-        for (var _iterator4 = themesToActivate[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-          var url = _step4.value;
+        for (var _iterator4 = themesToDeactivate[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var theme = _step4.value;
+
+          this.deactivateTheme(theme);
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
+          }
+        }
+      }
+
+      this.activeThemes = incomingUrls;
+
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
+
+      try {
+        for (var _iterator5 = themesToActivate[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var url = _step5.value;
 
           if (!url) {
             continue;
@@ -513,16 +566,16 @@ var ComponentManager = function () {
           document.getElementsByTagName("head")[0].appendChild(link);
         }
       } catch (err) {
-        _didIteratorError4 = true;
-        _iteratorError4 = err;
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion4 && _iterator4.return) {
-            _iterator4.return();
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
           }
         } finally {
-          if (_didIteratorError4) {
-            throw _iteratorError4;
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
       }
