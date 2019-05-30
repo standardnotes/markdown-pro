@@ -106,6 +106,9 @@
   border: 1px solid var(--sn-stylekit-border-color);
   border-radius: 3px;
 }
+.editor-preview-active code, .editor-preview-active-side code {
+  font-family: var(--sn-stylekit-monospace-font);
+}
 .editor-preview-active blockquote, .editor-preview-active-side blockquote {
   padding: 0 0.5rem;
   margin-left: 0;
