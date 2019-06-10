@@ -250,10 +250,10 @@
   color: var(--sn-stylekit-foreground-color);
 }
 .sn-component .sk-panel {
-  box-shadow: 0px 2px 13px var(--sn-stylekit-shadow-color);
+  box-shadow: 0px 2px 5px var(--sn-stylekit-shadow-color);
   background-color: var(--sn-stylekit-background-color);
-  border: 1px solid var(--sn-stylekit-contrast-border-color);
-  border-radius: 0.7rem;
+  border: 1px solid var(--sn-stylekit-border-color);
+  border-radius: var(--sn-stylekit-general-border-radius);
   display: flex;
   flex-direction: column;
   overflow: auto;
@@ -273,8 +273,9 @@
   display: flex;
   justify-content: space-between;
   padding: 1.1rem 2rem;
-  border-bottom: 1px solid var(--sn-stylekit-border-color);
+  border-bottom: 1px solid var(--sn-stylekit-contrast-border-color);
   background-color: var(--sn-stylekit-contrast-background-color);
+  color: var(--sn-stylekit-contrast-foreground-color);
   align-items: center;
 }
 .sn-component .sk-panel .sk-panel-header .sk-panel-header-title {
@@ -417,7 +418,7 @@
 .sn-component .sk-menu-panel {
   background-color: var(--sn-stylekit-background-color);
   border: 1px solid var(--sn-stylekit-contrast-border-color);
-  border-radius: 0.6rem;
+  border-radius: var(--sn-stylekit-general-border-radius);
   overflow: scroll;
   user-select: none;
   overflow-y: auto !important;
@@ -425,8 +426,9 @@
 }
 .sn-component .sk-menu-panel .sk-menu-panel-header {
   padding: 0.8rem 1rem;
-  border-bottom: 1px solid var(--sn-stylekit-border-color);
+  border-bottom: 1px solid var(--sn-stylekit-contrast-border-color);
   background-color: var(--sn-stylekit-contrast-background-color);
+  color: var(--sn-stylekit-contrast-foreground-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -449,6 +451,8 @@
 }
 .sn-component .sk-menu-panel .sk-menu-panel-row:hover {
   background-color: var(--sn-stylekit-contrast-background-color);
+  color: var(--sn-stylekit-contrast-foreground-color);
+  border-color: var(--sn-stylekit-contrast-border-color);
 }
 .sn-component .sk-menu-panel .sk-menu-panel-row .sk-menu-panel-column {
   display: flex;
@@ -1934,14 +1938,18 @@
   height: 2rem;
   padding: 0.0rem 0.8rem;
   background-color: var(--sn-stylekit-contrast-background-color);
+  color: var(--sn-stylekit-contrast-foreground-color);
   justify-content: space-between;
   align-items: center;
-  border: 1px solid var(--sn-stylekit-border-color);
+  border: 1px solid var(--sn-stylekit-contrast-border-color);
   user-select: none;
 }
 .sn-component .sk-app-bar.no-edges {
   border-left: 0;
   border-right: 0;
+}
+.sn-component .sk-app-bar.no-bottom-edge {
+  border-bottom: 0;
 }
 .sn-component .sk-app-bar .left, .sn-component .sk-app-bar .right {
   display: flex;

@@ -238,22 +238,25 @@ var ComponentManager = function () {
   }, {
     key: "streamContextItem",
     value: function streamContextItem(callback) {
+      var _this2 = this;
+
       this.postMessage("stream-context-item", null, function (data) {
         var item = data.item;
         /*
-          When an item is saved via saveItem, its updated_at value is set client side to the current date.
-          If we make a change locally, then for whatever reason receive an item via streamItems/streamContextItem,
-          we want to ignore that change if it was made prior to the latest change we've made.
-           Update 1/22/18: However, if a user is restoring a note from version history, this change
-          will not pass through this filter and will thus be ignored. Because the client now handles
-          this case with isMetadataUpdate, we no longer need the below.
+          If this is a new context item than the context item the component was currently entertaining,
+          we want to immediately commit any pending saves, because if you send the new context item to the
+          component before it has commited its presave, it will end up first replacing the UI with new context item,
+          and when the debouncer executes to read the component UI, it will be reading the new UI for the previous item.
         */
-        // if(this.streamedContextItem && this.streamedContextItem.uuid == item.uuid
-        //   && this.streamedContextItem.updated_at > item.updated_at) {
-        //   return;
-        // }
-        // this.streamedContextItem = item;
-        callback(item);
+        var isNewItem = !_this2.lastStreamedItem || _this2.lastStreamedItem.uuid !== item.uuid;
+        if (isNewItem && _this2.pendingSaveTimeout) {
+          clearTimeout(_this2.pendingSaveTimeout);
+          _this2._performSavingOfItems(_this2.pendingSaveParams);
+          _this2.pendingSaveTimeout = null;
+          _this2.pendingSaveParams = null;
+        }
+        _this2.lastStreamedItem = item;
+        callback(_this2.lastStreamedItem);
       });
     }
   }, {
@@ -280,10 +283,10 @@ var ComponentManager = function () {
   }, {
     key: "createItems",
     value: function createItems(items, callback) {
-      var _this2 = this;
+      var _this3 = this;
 
       var mapped = items.map(function (item) {
-        return _this2.jsonObjectForItem(item);
+        return _this3.jsonObjectForItem(item);
       });
       this.postMessage("create-items", { items: mapped }, function (data) {
         callback && callback(data.items);
@@ -352,74 +355,70 @@ var ComponentManager = function () {
     value: function saveItemsWithPresave(items, presave, callback) {
       this.saveItems(items, callback, false, presave);
     }
+  }, {
+    key: "_performSavingOfItems",
+    value: function _performSavingOfItems(_ref) {
+      var items = _ref.items,
+          presave = _ref.presave,
+          callback = _ref.callback;
+
+      // presave block allows client to gain the benefit of performing something in the debounce cycle.
+      presave && presave();
+
+      var mappedItems = [];
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = items[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var item = _step2.value;
+
+          mappedItems.push(this.jsonObjectForItem(item));
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      this.postMessage("save-items", { items: mappedItems }, function (data) {
+        callback && callback();
+      });
+    }
 
     /*
     skipDebouncer allows saves to go through right away rather than waiting for timeout.
     This should be used when saving items via other means besides keystrokes.
-     */
+    */
 
   }, {
     key: "saveItems",
     value: function saveItems(items, callback) {
-      var _this3 = this;
+      var _this4 = this;
 
       var skipDebouncer = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var presave = arguments[3];
 
-      var saveBlock = function saveBlock(itemsToSave) {
-        // presave block allows client to gain the benefit of performing something in the debounce cycle.
-        presave && presave();
 
-        var mappedItems = [];
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
-
-        try {
-          for (var _iterator2 = itemsToSave[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var item = _step2.value;
-
-            item.updated_at = new Date();
-            mappedItems.push(_this3.jsonObjectForItem(item));
-          }
-        } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-              _iterator2.return();
-            }
-          } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
-            }
-          }
-        }
-
-        _this3.postMessage("save-items", { items: mappedItems }, function (data) {
-          callback && callback();
-        });
-      };
-
-      /*
-        Coallesed saving prevents saves from being made after every keystroke, and instead
-        waits coallesedSavingDelay before performing action. For example, if a user types a keystroke, and the clienet calls saveItem,
-        a 250ms delay will begin. If they type another keystroke within 250ms, the previously pending
-        save will be cancelled, and another 250ms delay occurs. If ater 250ms the pending delay is not cleared by a future call,
-        the save will finally trigger.
-         Note: it's important to modify saving items updated_at immediately and not after delay. If you modify after delay,
-        a delayed sync could just be wrapping up, and will send back old data and replace what the user has typed.
-       */
-
-      // We also need to make sure that when we clear a pending save timeout, we carry over those pending items into the new save.
+      // We need to make sure that when we clear a pending save timeout,
+      // we carry over those pending items into the new save.
       if (!this.pendingSaveItems) {
         this.pendingSaveItems = [];
       }
 
       if (this.coallesedSaving == true && !skipDebouncer) {
-        if (this.pendingSave) {
-          clearTimeout(this.pendingSave);
+        if (this.pendingSaveTimeout) {
+          clearTimeout(this.pendingSaveTimeout);
         }
 
         var incomingIds = items.map(function (item) {
@@ -428,19 +427,28 @@ var ComponentManager = function () {
 
         // Replace any existing save items with incoming values
         // Only keep items here who are not in incomingIds
-        this.pendingSaveItems = this.pendingSaveItems.filter(function (item) {
+        var preexistingItems = this.pendingSaveItems.filter(function (item) {
           return !incomingIds.includes(item.uuid);
         });
 
         // Add new items, now that we've made sure it's cleared of incoming items.
-        this.pendingSaveItems = this.pendingSaveItems.concat(items);
-        this.pendingSave = setTimeout(function () {
-          saveBlock(_this3.pendingSaveItems);
-          // Clear pending save items
-          _this3.pendingSaveItems = [];
+        this.pendingSaveItems = preexistingItems.concat(items);
+
+        // We'll potentially need to commit early if stream-context-item message comes in
+        this.pendingSaveParams = {
+          items: this.pendingSaveItems,
+          presave: presave,
+          callback: callback
+        };
+
+        this.pendingSaveTimeout = setTimeout(function () {
+          _this4._performSavingOfItems(_this4.pendingSaveParams);
+          _this4.pendingSaveItems = [];
+          _this4.pendingSaveTimeout = null;
+          _this4.pendingSaveParams = null;
         }, this.coallesedSavingDelay);
       } else {
-        saveBlock(items);
+        this._performSavingOfItems({ items: items, presave: presave, callback: callback });
       }
     }
   }, {
