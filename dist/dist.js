@@ -675,7 +675,7 @@ if (window) {
 }
 //# sourceMappingURL=dist.js.map
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
+'use strict';
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
@@ -689,7 +689,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   var ignoreTextChange = false;
   var initialLoad = true;
-  var lastValue, lastUUID;
+  var lastValue, lastUUID, clientData;
 
   componentManager.streamContextItem(function (note) {
 
@@ -698,6 +698,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
       lastValue = null;
       initialLoad = true;
       lastUUID = note.uuid;
+      clientData = note.clientData;
     }
 
     workingNote = note;
@@ -715,8 +716,21 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     if (initialLoad) {
       initialLoad = false;
+      console.log('initial load');
       window.easymde.codemirror.getDoc().clearHistory();
-      if (window.easymde.isPreviewActive()) {
+      var mode = clientData && clientData.mode;
+
+      // Set initial editor mode
+      if (mode === 'preview') {
+        if (!window.easymde.isPreviewActive()) {
+          window.easymde.togglePreview();
+        }
+      } else if (mode === 'split') {
+        if (!window.easymde.isSideBySideActive()) {
+          window.easymde.toggleSideBySide();
+        }
+        // falback config
+      } else if (window.easymde.isPreviewActive()) {
         window.easymde.togglePreview();
       }
     }
@@ -729,8 +743,47 @@ document.addEventListener("DOMContentLoaded", function (event) {
     shortcuts: {
       toggleSideBySide: "Cmd-Alt-P"
     },
-    toolbar: ["heading", "bold", "italic", "strikethrough", "|", "quote", "code", "|", "unordered-list", "ordered-list", "|", "clean-block", "|", "link", "image", "|", "table", "|", "preview", "side-by-side"]
+    toolbar: ["heading", "bold", "italic", "strikethrough", "|", "quote", "code", "|", "unordered-list", "ordered-list", "|", "clean-block", "|", "link", "image", "|", "table", "|", {
+      className: "fa fa-eye",
+      default: true,
+      name: "preview",
+      noDisable: true,
+      title: "Toggle Preview",
+      action: function action() {
+        window.easymde.togglePreview();
+        saveMetadata();
+      }
+    }, {
+      className: "fa fa-columns",
+      default: true,
+      name: "side-by-side",
+      noDisable: true,
+      noMobile: true,
+      title: "Toggle Side by Side",
+      action: function action() {
+        window.easymde.toggleSideBySide();
+        saveMetadata();
+      }
+    }]
   });
+
+  function saveMetadata() {
+    function getEditorMode() {
+      var editor = window.easymde;
+
+      if (editor) {
+        if (editor.isPreviewActive()) return 'preview';
+        if (editor.isSideBySideActive()) return 'split';
+      }
+      return 'edit';
+    }
+
+    var note = workingNote;
+
+    componentManager.saveItemWithPresave(note, function () {
+      note.clientData = { mode: getEditorMode() };
+    });
+  }
 
   // Some sort of issue on Mobile RN where this causes an exception (".className is not defined")
   try {
