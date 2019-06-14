@@ -716,7 +716,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     if (initialLoad) {
       initialLoad = false;
-      console.log('initial load');
       window.easymde.codemirror.getDoc().clearHistory();
       var mode = clientData && clientData.mode;
 
