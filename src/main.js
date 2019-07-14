@@ -64,13 +64,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       toggleSideBySide: "Cmd-Alt-P"
     },
     toolbar:[
-      "heading", "bold", "italic", "strikethrough",
-      "|", "quote", "code",
-      "|", "unordered-list", "ordered-list",
-      "|", "clean-block",
-      "|", "link", "image",
-      "|", "table",
-      "|",
       {
         className: "fa fa-eye",
         default: true,
@@ -93,7 +86,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
           window.easymde.toggleSideBySide();
           saveMetadata();
         }
-      }
+      },
+      "|",
+      "heading", "bold", "italic", "strikethrough",
+      "|", "quote", "code",
+      "|", "unordered-list", "ordered-list",
+      "|", "clean-block",
+      "|", "link", "image",
+      "|", "table"
     ]
   });
 
