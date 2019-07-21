@@ -148,6 +148,22 @@
   color: var(--sn-stylekit-info-contrast-color) !important;
   background: var(--sn-stylekit-info-color) !important;
 }
+.CodeMirror .cm-header-1 {
+  font-size: 200% !important;
+  line-height: 200% !important;
+}
+.CodeMirror .cm-header-2 {
+  font-size: 150% !important;
+  line-height: 150% !important;
+}
+.CodeMirror .cm-header-3 {
+  font-size: 117% !important;
+  line-height: 117% !important;
+}
+.CodeMirror .cm-header-4 {
+  font-size: 112% !important;
+  line-height: 112% !important;
+}
 .CodeMirror .cm-formatting-header, .CodeMirror .cm-formatting-strong, .CodeMirror .cm-formatting-em {
   opacity: 0.2;
 }

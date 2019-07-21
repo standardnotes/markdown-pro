@@ -163,6 +163,26 @@ body, html {
     }
   }
 
+  .cm-header-1 {
+    font-size: 200% !important;
+    line-height: 200% !important;
+  }
+
+  .cm-header-2 {
+    font-size: 150% !important;
+    line-height: 150% !important;
+  }
+
+  .cm-header-3 {
+    font-size: 117% !important;
+    line-height: 117% !important;
+  }
+
+  .cm-header-4 {
+    font-size: 112% !important;
+    line-height: 112% !important;
+  }
+
   // Faded Markdown syntax
   .cm-formatting-header, .cm-formatting-strong, .cm-formatting-em {
     opacity: 0.2;
