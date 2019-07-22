@@ -66,6 +66,7 @@ module.exports = function(grunt) {
         src: [
           'vendor/*.js',
           "node_modules/easymde/dist/easymde.min.js",
+          "node_modules/highlightjs/highlight.pack.min.js",
           "node_modules/sn-components-api/dist/dist.js"
         ],
         dest: 'dist/lib.js',

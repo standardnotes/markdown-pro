@@ -63,6 +63,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     shortcuts: {
       toggleSideBySide: "Cmd-Alt-P"
     },
+    renderingConfig: {
+      codeSyntaxHighlighting: true
+    },
     toolbar:[
       "heading", "bold", "italic", "strikethrough",
       "|", "quote", "code",
