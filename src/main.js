@@ -63,9 +63,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     shortcuts: {
       toggleSideBySide: "Cmd-Alt-P"
     },
-    renderingConfig: {
-      codeSyntaxHighlighting: true
-    },
+    // Syntax highlighting is disabled until we figure out performance issue: https://github.com/sn-extensions/advanced-markdown-editor/pull/20#issuecomment-513811633
+    // renderingConfig: {
+    //   codeSyntaxHighlighting: true
+    // },
     toolbar:[
       {
         className: "fa fa-eye",
