@@ -28,7 +28,6 @@
   border-bottom: 0;
   background-color: transparent;
   border: none;
-  padding: 0 10px;
   font-size: var(--sn-stylekit-font-size-editor);
   -webkit-overflow-scrolling: touch;
 }
