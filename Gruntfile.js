@@ -92,7 +92,8 @@ module.exports = function(grunt) {
     copy: {
       main: {
         files: [
-          {expand: false, src: ['vendor/modes/**/*'], dest: 'dist/', filter: 'isFile'}
+          {expand: false, src: ['vendor/modes/**/*'], dest: 'dist/', filter: 'isFile'},
+          {expand: true, cwd: 'src/fonts', src: '**/*', dest: 'dist/fonts' }
         ]
       }
     }
