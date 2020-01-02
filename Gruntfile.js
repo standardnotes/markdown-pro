@@ -11,7 +11,7 @@ module.exports = function(grunt) {
       },
     },
     css: {
-      files: ['src/main.scss'],
+      files: ['src/main.scss', 'src/css/*.css'],
       tasks: ['sass','concat:css', 'copy'],
       options: {
         spawn: false,
@@ -81,7 +81,10 @@ module.exports = function(grunt) {
         options: {
           separator: '',
         },
-        src: ['node_modules/easymde/dist/easymde.min.css', 'dist/app.css', 'node_modules/sn-stylekit/dist/stylekit.css'],
+        src: [
+          'node_modules/easymde/dist/easymde.min.css', 'dist/app.css', 'node_modules/sn-stylekit/dist/stylekit.css',
+          'src/css/*.css'
+        ],
         dest: 'dist/dist.css',
       }
     },
