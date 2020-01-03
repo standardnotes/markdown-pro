@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   window.easymde = new EasyMDE({
     element: document.getElementById("editor"),
+    autoDownloadFontAwesome: false,
     spellChecker: false,
     status: false,
     shortcuts: {
