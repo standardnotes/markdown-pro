@@ -82,6 +82,7 @@
   border: 1px solid var(--sn-stylekit-border-color);
   padding: 20px;
   border-radius: 3px;
+  overflow-x: auto;
 }
 .editor-preview-active table, .editor-preview-active-side table {
   display: block;
