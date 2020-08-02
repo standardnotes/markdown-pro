@@ -142,7 +142,7 @@
   color: var(--sn-stylekit-info-contrast-color) !important;
   background: var(--sn-stylekit-info-color) !important;
 }
-.CodeMirror .CodeMirror-code, .CodeMirror .editor-preview {
+.CodeMirror .CodeMirror-code {
   font-family: var(--sn-stylekit-monospace-font) !important;
 }
 .CodeMirror .cm-header {
