@@ -156,6 +156,10 @@ body, html {
     }
   }
 
+  .CodeMirror-code {
+    font-family: var(--sn-stylekit-monospace-font) !important;
+  }
+
   .cm-header {
     color: var(--sn-stylekit-editor-foreground-color);
     &.CodeMirror-selectedtext {
