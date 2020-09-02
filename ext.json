@@ -1,8 +1,8 @@
 {
-  "identifier": "xyz.v29.editor.advanced-markdown",
-  "name": "Advanced Markdown Editor",
+  "identifier": "com.andyduss.editor.advanced-markdown",
+  "name": "Markdown Pro Editor",
   "content_type": "SN|Component",
   "area": "editor-editor",
-  "version": "2019.12.11",
-  "url": "https://v29.xyz/md-editor"
+  "version": "2020.09.02",
+  "url": "https://andyduss.com/md-editor"
 }
