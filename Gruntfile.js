@@ -11,7 +11,7 @@ module.exports = function(grunt) {
       },
     },
     css: {
-      files: ['src/main.scss'],
+      files: ['src/main.scss', 'src/css/*.css'],
       tasks: ['sass','concat:css', 'copy'],
       options: {
         spawn: false,
@@ -32,10 +32,6 @@ module.exports = function(grunt) {
   },
 
    babel: {
-        options: {
-            sourceMap: true,
-            presets: ['es2015']
-        },
         app: {
             files: {
                 'dist/app.js': ['dist/app.js']
@@ -81,7 +77,12 @@ module.exports = function(grunt) {
         options: {
           separator: '',
         },
-        src: ['node_modules/easymde/dist/easymde.min.css', 'dist/app.css', 'node_modules/sn-stylekit/dist/stylekit.css'],
+        src: [
+          'node_modules/easymde/dist/easymde.min.css',
+          'dist/app.css',
+          'node_modules/sn-stylekit/dist/stylekit.css',
+          'vendor/css/*.css'
+        ],
         dest: 'dist/dist.css',
       }
     },
@@ -89,7 +90,12 @@ module.exports = function(grunt) {
     copy: {
       main: {
         files: [
-          {expand: false, src: ['vendor/modes/**/*'], dest: 'dist/', filter: 'isFile'}
+          {
+            expand: true,
+            cwd: 'vendor/fonts',
+            src: '**/*',
+            dest: 'dist/fonts'
+          }
         ]
       }
     }
@@ -102,6 +108,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-copy');
-
-  grunt.registerTask('default', ['concat:app', 'babel', 'browserify', 'concat:lib', 'concat:dist', 'sass', 'concat:css', 'copy']);
+  grunt.registerTask('default', [
+    'concat:app',
+    'babel',
+    'browserify',
+    'concat:lib',
+    'concat:dist',
+    'sass',
+    'concat:css',
+    'copy'
+  ]);
 };
