@@ -2,17 +2,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   var workingNote;
 
-  var componentManager = new ComponentManager(null, () => {
-    // on ready
-    document.body.classList.add(componentManager.platform);
-    document.body.classList.add(componentManager.environment);
+  var componentRelay = new ComponentRelay({
+    targetWindow: window,
+    onReady: () => {
+      document.body.classList.add(componentRelay.platform);
+      document.body.classList.add(componentRelay.environment);
+    }
   });
 
   var ignoreTextChange = false;
   var initialLoad = true;
   var lastValue, lastUUID, clientData;
 
-  componentManager.streamContextItem((note) => {
+  componentRelay.streamContextItem((note) => {
 
     if(note.uuid !== lastUUID) {
       // Note changed, reset last values
@@ -115,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     var note = workingNote;
 
-    componentManager.saveItemWithPresave(note, () => {
+    componentRelay.saveItemWithPresave(note, () => {
       note.clientData = { mode: getEditorMode() };
     });
   }
@@ -154,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // the right object, and it will save incorrectly.
         let note = workingNote;
 
-        componentManager.saveItemWithPresave(note, () => {
+        componentRelay.saveItemWithPresave(note, () => {
           lastValue = window.easymde.value();
 
           var html = window.easymde.options.previewRender(window.easymde.value());
