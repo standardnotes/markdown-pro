@@ -30,6 +30,35 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
+    let renderNote = false;
+    const isUnsafeContent = checkIfUnsafeContent(note.content.text);
+
+    if (isUnsafeContent) {
+      const currentNotePreferences = getCurrentNotePreferences();
+      if (!currentNotePreferences) {
+        showUnsafeContentAlert().then((result) => {
+          if (result) {
+            setNotePreferences('trustUnsafeContent', result);
+            renderNote = result;
+          }
+        });
+      } else {
+        renderNote = currentNotePreferences.trustUnsafeContent || false;
+      }
+    } else {
+      renderNote = true;
+    }
+
+    /**
+       * If the user decides not to continue rendering the note,
+       * clear the editor and disable it.
+       */
+    if (!renderNote) {
+      window.easymde.value('');
+      window.easymde.togglePreview();
+      return;
+    }
+
     if (note.content.text !== lastValue) {
       ignoreTextChange = true;
       window.easymde.value(note.content.text);
@@ -171,4 +200,61 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
+
+  function getNotePreferences() {
+    return componentRelay.getComponentDataValueForKey('notes') || {};
+  }
+
+  function getCurrentNotePreferences() {
+    const notesPreferences = getNotePreferences();
+    return notesPreferences[lastUUID];
+  }
+
+  function setNotePreferences(key, value) {
+    const notesPreferences = getNotePreferences();
+    notesPreferences[lastUUID] = {
+      [key]: value
+    };
+    componentRelay.setComponentDataValueForKey('notes', notesPreferences);
+  }
+
+  /**
+   * Checks if the content contains at least one script tag.
+   */
+  function checkIfUnsafeContent(content) {
+    const DOMPurify = require('dompurify');
+    const sanitizedContent = DOMPurify.sanitize(content);
+    return content !== sanitizedContent;
+  }
+
+  function showUnsafeContentAlert() {
+    const text = 'We’ve detected that this note contains a script or code snippet which may be unsafe to execute. ' +
+                  'Scripts executed in the editor have the ability to impersonate as the editor to Standard Notes. ' +
+                  'Press Continue to mark this script as safe and proceed, or Cancel to avoid rendering this note.';
+
+    return new Promise((resolve) => {
+      const Stylekit = require('sn-stylekit');
+      const alert = new Stylekit.SKAlert({
+        title: null,
+        text,
+        buttons: [
+          {
+            text: 'Cancel',
+            style: 'neutral',
+            action: function() {
+              resolve(false);
+            },
+          },
+          {
+            text: 'Continue',
+            style: 'danger',
+            action: function() {
+              resolve(true);
+            },
+          },
+        ]
+      });
+      alert.present();
+    });
+  }
 });
