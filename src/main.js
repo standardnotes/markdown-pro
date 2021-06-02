@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
      * clear the editor and disable it.
      */
     if (!renderNote) {
-      window.easymde.value('');
       window.easymde.togglePreview();
+      disableRendering();
       return;
     }
 
@@ -133,6 +133,10 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   function saveMetadata() {
+    if (!renderNote) {
+      return;
+    }
+
     const getEditorMode = () => {
       const editor = window.easymde;
 
@@ -167,22 +171,21 @@ document.addEventListener('DOMContentLoaded', function() {
   window.easymde.codemirror.setOption('viewportMargin', 100);
 
   window.easymde.codemirror.on('change', function() {
-
-    function strip(html) {
+    const strip = (html) => {
       const tmp = document.implementation.createHTMLDocument('New').body;
       tmp.innerHTML = html;
       return tmp.textContent || tmp.innerText || '';
-    }
+    };
 
-    function truncateString(string, limit = 90) {
+    const truncateString = (string, limit = 90) => {
       if (string.length <= limit) {
         return string;
       } else {
         return string.substring(0, limit) + '...';
       }
-    }
+    };
 
-    if (!ignoreTextChange) {
+    if (!ignoreTextChange && renderNote) {
       if (workingNote) {
         // Be sure to capture this object as a variable, as this.note may be reassigned in `streamContextItem`, so by the time
         // you modify it in the presave block, it may not be the same object anymore, so the presave values will not be applied to
@@ -211,6 +214,13 @@ document.addEventListener('DOMContentLoaded', function() {
         trustUnsafeContent: true
       };
     });
+  }
+
+  function disableRendering() {
+    const previewButton = document.querySelector('.editor-toolbar > button.preview');
+    const sideBySideButton = document.querySelector('.editor-toolbar > button.side-by-side');
+    previewButton.classList.remove('no-disable');
+    sideBySideButton.classList.remove('no-disable');
   }
 
   /**
