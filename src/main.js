@@ -13,8 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
   let ignoreTextChange = false;
   let initialLoad = true;
   let lastValue, lastUUID, clientData;
+  let renderNote = false;
 
-  componentRelay.streamContextItem((note) => {
+  componentRelay.streamContextItem(async (note) => {
     if (note.uuid !== lastUUID) {
       // Note changed, reset last values
       lastValue = null;
@@ -30,29 +31,28 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    let renderNote = false;
     const isUnsafeContent = checkIfUnsafeContent(note.content.text);
 
     if (isUnsafeContent) {
-      const currentNotePreferences = getCurrentNotePreferences();
-      if (!currentNotePreferences) {
-        showUnsafeContentAlert().then((result) => {
+      const trustUnsafeContent = clientData['trustUnsafeContent'] ?? false;
+      if (!trustUnsafeContent) {
+        await showUnsafeContentAlert().then((result) => {
           if (result) {
-            setNotePreferences('trustUnsafeContent', result);
+            setTrustUnsafeContent(workingNote);
             renderNote = result;
           }
         });
       } else {
-        renderNote = currentNotePreferences.trustUnsafeContent || false;
+        renderNote = true;
       }
     } else {
       renderNote = true;
     }
 
     /**
-       * If the user decides not to continue rendering the note,
-       * clear the editor and disable it.
-       */
+     * If the user decides not to continue rendering the note,
+     * clear the editor and disable it.
+     */
     if (!renderNote) {
       window.easymde.value('');
       window.easymde.togglePreview();
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   function saveMetadata() {
-    function getEditorMode() {
+    const getEditorMode = () => {
       const editor = window.easymde;
 
       if (editor) {
@@ -141,12 +141,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (editor.isSideBySideActive()) return 'split';
       }
       return 'edit';
-    }
+    };
 
     const note = workingNote;
 
     componentRelay.saveItemWithPresave(note, () => {
-      note.clientData = { mode: getEditorMode() };
+      note.clientData = {
+        ...note.clientData,
+        mode: getEditorMode()
+      };
     });
   }
 
@@ -201,21 +204,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  function getNotePreferences() {
-    return componentRelay.getComponentDataValueForKey('notes') || {};
-  }
-
-  function getCurrentNotePreferences() {
-    const notesPreferences = getNotePreferences();
-    return notesPreferences[lastUUID];
-  }
-
-  function setNotePreferences(key, value) {
-    const notesPreferences = getNotePreferences();
-    notesPreferences[lastUUID] = {
-      [key]: value
-    };
-    componentRelay.setComponentDataValueForKey('notes', notesPreferences);
+  function setTrustUnsafeContent(note) {
+    componentRelay.saveItemWithPresave(note, () => {
+      note.clientData = {
+        ...note.clientData,
+        trustUnsafeContent: true
+      };
+    });
   }
 
   /**
