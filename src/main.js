@@ -224,12 +224,60 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   /**
-   * Checks if the content contains at least one script tag.
+   * Checks if a markdown text is safe to render.
    */
-  function checkIfUnsafeContent(content) {
+  function checkIfUnsafeContent(markdownText) {
+    const marked = require('marked');
     const DOMPurify = require('dompurify');
-    const sanitizedContent = DOMPurify.sanitize(content);
-    return content !== sanitizedContent;
+
+    /**
+     * Using marked to get the resulting HTML string from the markdown text.
+     */
+    const renderedHtml = marked(markdownText, {
+      headerIds: false,
+      smartypants: true
+    });
+
+    const sanitizedHtml = DOMPurify.sanitize(renderedHtml, {
+      /**
+       * We don't need script or style tags.
+       */
+      FORBID_TAGS: ['script', 'style'],
+      /**
+       * XSS payloads can be injected via this attributes.
+       */
+      FORBID_ATTR: [
+        'onerror',
+        'onload',
+        'onunload',
+        'onclick',
+        'ondblclick',
+        'onmousedown',
+        'onmouseup',
+        'onmouseover',
+        'onmousemove',
+        'onmouseout',
+        'onfocus',
+        'onblur',
+        'onkeypress',
+        'onkeydown',
+        'onkeyup',
+        'onsubmit',
+        'onreset',
+        'onselect',
+        'onchange'
+      ]
+    });
+
+    /**
+     * Create documents from both the sanitized string and the rendered string.
+     * This will allow us to compare them, and if they are not equal
+     * (i.e: do not contain the same properties, attributes, inner text, etc)
+     * it means something was stripped.
+     */
+    const renderedDom = new DOMParser().parseFromString(renderedHtml, 'text/html');
+    const sanitizedDom = new DOMParser().parseFromString(sanitizedHtml, 'text/html');
+    return !renderedDom.isEqualNode(sanitizedDom);
   }
 
   function showUnsafeContentAlert() {
