@@ -135,7 +135,12 @@ document.addEventListener('DOMContentLoaded', function() {
       '|', 'clean-block',
       '|', 'link', 'image',
       '|', 'table'
-    ]
+    ],
+    /**
+     * The "contenteditable" input model has an an issue on Mobile, where the cursor
+     * moves to the next line for just a split second, then returns to the previous line.
+     */
+    inputStyle: 'textarea'
   });
 
   function saveMetadata() {
