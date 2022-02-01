@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let workingNote;
 
-  let componentRelay = new ComponentRelay({
+  const componentRelay = new ComponentRelay({
     targetWindow: window,
     onReady: () => {
       document.body.classList.add(componentRelay.platform);
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
     autoDownloadFontAwesome: false,
     spellChecker: false,
     nativeSpellcheck: true,
-    inputStyle: 'contenteditable',
+    inputStyle: getInputStyleForEnvironment(),
     status: false,
     shortcuts: {
       toggleSideBySide: 'Cmd-Alt-P'
@@ -143,11 +143,6 @@ document.addEventListener('DOMContentLoaded', function () {
       '|', 'link', 'image',
       '|', 'table'
     ],
-    /**
-     * The "contenteditable" input model has issues on Mobile (Android). E.g: the cursor
-     * moves to the next line for just a split second, then returns to the previous line.
-     */
-    inputStyle: 'textarea'
   });
 
   function saveMetadata() {
@@ -328,5 +323,10 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       alert.present();
     });
+  }
+
+  function getInputStyleForEnvironment() {
+    const environment = componentRelay.environment ?? 'web';
+    return environment === 'mobile' ? 'textarea' : 'contenteditable';
   }
 });
