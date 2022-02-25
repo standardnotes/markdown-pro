@@ -189,6 +189,14 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
+    window.easymde.codemirror.on('cursorActivity', function (editor) {
+      if (componentRelay.environment !== 'mobile') {
+        return;
+      }
+
+      setTimeout(() => editor.scrollIntoView(), 200);
+    });
+
     // Some sort of issue on Mobile RN where this causes an exception (".className is not defined")
     try {
       window.easymde.toggleFullScreen();
