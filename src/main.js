@@ -189,12 +189,20 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
+    /**
+     * Scrolls the cursor into view, so the soft keyboard on mobile devices
+     * doesn't overlap the cursor. A short delay is added to prevent scrolling
+     * before the keyboard is shown.
+     */
+    const scrollCursorIntoView = (editor) => {
+      setTimeout(() => editor.scrollIntoView(), 200);
+    };
+
     window.easymde.codemirror.on('cursorActivity', function (editor) {
       if (componentRelay.environment !== 'mobile') {
         return;
       }
-
-      setTimeout(() => editor.scrollIntoView(), 200);
+      scrollCursorIntoView(editor);
     });
 
     // Some sort of issue on Mobile RN where this causes an exception (".className is not defined")
